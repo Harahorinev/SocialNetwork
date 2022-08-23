@@ -1,0 +1,22 @@
+import * as React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { MAIN_PADDING, MAIN_WHITE } from '../constatnts'
+
+function MusicPage () {
+    return (
+        <View style={styles.container}>
+            <Text>Music</Text>
+        </View>
+    )
+}
+
+const styles = StyleSheet.create ({
+    container: {
+        flex: 1,
+        width: '100%',
+        paddingHorizontal: MAIN_PADDING,
+        backgroundColor: MAIN_WHITE
+    }
+})
+
+export default MusicPage
