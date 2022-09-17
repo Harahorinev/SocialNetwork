@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {SECOND_WHITE} from "../../../constatnts";
+import {usersAPI} from "../../../api/api";
 
 const UserComponentForList = (props: any) => {
     return (
@@ -18,8 +19,21 @@ const UserComponentForList = (props: any) => {
                     <Text style={styles.nameStyle}>{props.name}</Text>
                 </TouchableOpacity>
                 <View style={{height: 5}}/>
-                <TouchableOpacity onPress={() => props.followStatusChanger(props.id)}>
-                    <Text>{props.followed ? 'follow' : 'unfollow'}</Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        props.toggleFollowingProgress(true, props.id)
+                        usersAPI.userFollower(props.followed, props.id).then((resultCode: any) => {
+                                if (resultCode === 0) {
+                                    props.followStatusChanger(props.id)
+                                }
+                                props.toggleFollowingProgress(false, props.id)
+                            })
+                    }}
+                    disabled={props.followingInProgress.some((id: number) => id === props.id)}
+                >
+                    <Text
+                        style={{color: props.followed ? 'green' : 'red'}}
+                    >{props.followed ? 'follow' : 'unfollow'}</Text>
                 </TouchableOpacity>
             </View>
         </View>

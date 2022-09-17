@@ -10,7 +10,13 @@ import {
 import {useEffect} from "react";
 import {MAIN_PADDING, MAIN_WHITE, REQUEST_QUANTITY_USERS} from "../../constatnts";
 import {connect} from "react-redux";
-import {addUsers, fetchNextPage, followStatusChanger, isFetching} from "../../redux/allUsersReducer";
+import {
+    addUsers,
+    fetchNextPage,
+    followStatusChanger,
+    isFetching,
+    toggleFollowingProgress
+} from "../../redux/allUsersReducer";
 import UserComponentForList from "./components/UserComponentForList";
 import {usersAPI} from "../../api/api";
 
@@ -35,6 +41,8 @@ const UsersListScreen = (props: any) => {
                                   followStatusChanger={props.followStatusChanger}
                                   id={itm.item.id}
                                   followed={itm.item.followed}
+                                  followingInProgress={props.users.followingInProgress}
+                                  toggleFollowingProgress={props.toggleFollowingProgress}
             />
         )
     }
@@ -76,4 +84,6 @@ const mapStateToProps = (state: any) => {
     }
 }
 
-export default connect(mapStateToProps, {addUsers, isFetching, fetchNextPage, followStatusChanger})(UsersListScreen)
+export default connect(mapStateToProps, {
+    addUsers, isFetching, fetchNextPage, followStatusChanger, toggleFollowingProgress
+})(UsersListScreen)
