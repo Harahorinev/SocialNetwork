@@ -9,8 +9,16 @@ import {
     View
 } from 'react-native'
 import {MAIN_PADDING, MAIN_WHITE, SECOND_WHITE} from '../../../constatnts'
+import {useState} from "react";
 
-function AvaDescriptionComponent() {
+interface Props {
+    ava: any
+    description: string
+    addPost: any
+}
+
+function AvaDescriptionComponent(props: Props) {
+    const [postText, setPostText] = useState<string>('')
     return (
         <View style={styles.lowContainer}>
             <TouchableWithoutFeedback>
@@ -18,11 +26,11 @@ function AvaDescriptionComponent() {
                     <View style={styles.avaDescriptionContainer}>
                         <Image
                             style={styles.ava}
-                            source={require('../../../assets/images/ava.jpeg')}
+                            source={props.ava}
                         />
                         <View style={{flex: 1}}/>
                         <View style={styles.description}>
-                            <Text>Description</Text>
+                            <Text>{props.description}</Text>
                         </View>
                     </View>
                     <View style={styles.newPostContainer}>
@@ -30,11 +38,17 @@ function AvaDescriptionComponent() {
                             <TextInput
                                 style={styles.textInput}
                                 multiline={true}
+                                value={postText}
+                                onChangeText={(text) => setPostText(text)}
                             />
                         </View>
                         <TouchableOpacity
                             style={styles.addNewPostBtn}
-                            onPress={() => console.log('re')}
+                            disabled={!postText}
+                            onPress={() => {
+                                props.addPost(postText)
+                                setPostText('')
+                            }}
                         >
                             <Text>Add</Text>
                         </TouchableOpacity>
@@ -46,18 +60,17 @@ function AvaDescriptionComponent() {
 }
 
 const styles = StyleSheet.create({
-    lowContainer: {
-        height: 200,
-        width: '100%',
-        backgroundColor: SECOND_WHITE
-    },
     highContainer: {
         height: 200,
         width: '100%',
         paddingHorizontal: MAIN_PADDING,
         borderBottomEndRadius: 60,
         backgroundColor: MAIN_WHITE
-
+    },
+    lowContainer: {
+        height: 200,
+        width: '100%',
+        backgroundColor: SECOND_WHITE
     },
     avaDescriptionContainer: {
         flex: 1,

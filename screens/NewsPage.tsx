@@ -2,7 +2,8 @@ import * as React from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
 import { MAIN_PADDING, MAIN_WHITE } from '../constatnts'
 
-function NewsPage ({navigation}: {navigation: any} ) {
+const NewsPage = ({navigation}: {navigation: any}) => {
+    console.log()
     return (
         <View style={styles.container}>
             <Button onPress={() => navigation.goBack()} title="Go back home" />

@@ -1,27 +1,18 @@
 import 'react-native-gesture-handler';
-
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
+import {Provider} from 'react-redux';
 import React from 'react';
-import {
-    StyleSheet,
-} from 'react-native';
-import DrawerNavigator from './navigation';
+import StackNavigator from './navigation';
+import {NavigationContainer} from "@react-navigation/native";
+import store from "./redux/store";
 
 const App = () => {
     return (
-        <DrawerNavigator/>
+        <Provider store={store}>
+            <NavigationContainer>
+                <StackNavigator/>
+            </NavigationContainer>
+        </Provider>
     );
 };
-
-const styles = StyleSheet.create({});
 
 export default App;

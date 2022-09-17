@@ -1,47 +1,21 @@
 import * as React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { MAIN_PADDING, MAIN_WHITE, SECOND_WHITE } from '../../../constatnts'
 import Post from './PostComponent'
 
-interface PostsData {
+interface PostData {
     id: number
     postText: string
     likesCounter: number
 }
 
-function PostsContainer() {
-    let postsData: PostsData[] = [
-        {
-            id: 1,
-            postText: 'qweqwe1',
-            likesCounter: 2
-        },
-        {
-            id: 2,
-            postText: 'qweqwe2',
-            likesCounter: 7
-        },
-        {
-            id: 3,
-            postText: 'qweqwe3',
-            likesCounter: 23,
-        }
-    ]
+function PostsContainer(props: any) {
     return (
         <View style={styles.lowPostsContainer}>
             <View style={styles.highPostsContainer}>
-                {postsData.map(post => {
-                    return <Post key={post.id} postText={post.postText}/>
+                {props.posts.slice().reverse().map((post: PostData) => {
+                    return <Post key={post.id} postText={post.postText} postLikes={post.likesCounter}/>
                 })}
-                {/*<Post postText='qweqwe1'/>*/}
-                {/*<Post postText='qweqwe2'/>*/}
-                {/*<Post postText='qweqwe3'/>*/}
-                {/*<Post postText='qweqwe4'/>*/}
-                {/*<Post postText='qweqwe5'/>*/}
-                {/*<Post postText='qweqwe6'/>*/}
-                {/*<Post postText='qweqwe7'/>*/}
-                {/*<Post postText='qweqwe8'/>*/}
-
             </View>
         </View>
     )

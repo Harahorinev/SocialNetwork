@@ -1,78 +1,59 @@
 import * as React from 'react'
 import {
-    FlatList,
-    ListRenderItem,
-    ListRenderItemInfo,
     SafeAreaView,
     StyleSheet,
-    Text, TextInput,
-    TouchableOpacity,
     View,
     KeyboardAvoidingView,
-    Keyboard,
+    Platform,
 } from 'react-native'
-import {MAIN_PADDING, MAIN_WHITE, MessagesData, SECOND_WHITE} from "../../constatnts";
-import {useEffect, useRef, useState} from "react";
+import {MAIN_WHITE} from "../../constatnts";
+import {addMessageAC, Message} from "../../redux/dialogsReducer";
+import MessageTextInputComponent from "./components/MessageTextInputComponent";
+import MessagesTopBarComponent from "./components/MessagesTopBarComponent";
+import MessagesListComponent from "./components/MessagesListComponent";
+import {useEffect} from "react";
+import store from "../../redux/store";
+import {useState} from "react";
+import {connect} from "react-redux";
 
-interface UserMessagesProps {
-    name: string
-    messages: MessagesData[]
-}
+function UserMessagesPage(props: any) {
 
-function UserMessagesPage(navigation: any) {
-    const messagesData: UserMessagesProps = navigation.route.params
+    const [messages, setMessages] = useState<Message[]>([])
+    const [name, setName] = useState<string>('')
 
-    const renderItem: ListRenderItem<MessagesData> = (itm: ListRenderItemInfo<MessagesData>) => {
-        return (
-            <View style={styles.messageContainer}>
-                <Text>{itm.item.message}</Text>
-            </View>
-        )
-    }
+    useEffect(() => {
+        let user = store.getState().dialogsPage.dialogs.find(d => {
+            if (d.userId === props.route.params.userId) {
+                return d
+            }
+        })
+        if (user) {
+            setMessages(user.messagesData)
+            setName(user.name)
+        }
+    }, [props])
+
 
     return (
-        <View style={styles.mainContainer}>
+        <SafeAreaView style={styles.mainContainer}>
             <KeyboardAvoidingView
                 style={styles.keyboardAvoiding}
-                behavior={"padding"}
-                enabled keyboardVerticalOffset={90}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                enabled keyboardVerticalOffset={0}
             >
-                <SafeAreaView style={styles.mainContainer}>
-                    <View style={{...styles.mainContainer, paddingHorizontal: MAIN_PADDING}}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigation.replace('Root')}
-                        >
-
-                            <Text>{messagesData.name}</Text>
-                        </TouchableOpacity>
-                        <FlatList
-                            data={messagesData.messages}
-                            renderItem={renderItem}
-                            keyExtractor={(item) => item.id.toString()}
-                            inverted contentContainerStyle={{flexDirection: 'column-reverse'}}
-                        />
-                    </View>
-
-                </SafeAreaView>
-                <SafeAreaView style={{width: '100%', backgroundColor: SECOND_WHITE}}>
-                    <View
-                        style={styles.textInputContainer}
-                    >
-                        <TextInput
-                            style={{...styles.textInput,}}
-                            onSubmitEditing={Keyboard.dismiss}
-                        />
-                        <View style={{width: 10}}/>
-                        <TouchableOpacity
-                            style={styles.sendBtn}
-                        >
-
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
-
+                <View style={{flex: 1, width: '100%'}}>
+                    <MessagesTopBarComponent
+                        name={name}
+                        navigation={() => props.navigation.replace('Root', {initialRouteName: 'Dialogs'})}
+                    />
+                    <MessagesListComponent messages={messages}/>
+                    <MessageTextInputComponent
+                        userId={props.route.params.userId}
+                        addMessage={props.addMessage}
+                    />
+                </View>
             </KeyboardAvoidingView>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -80,39 +61,25 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         width: '100%',
+        backgroundColor: MAIN_WHITE
     },
     keyboardAvoiding: {
         flex: 1,
         width: '100%',
         flexDirection: 'column',
         justifyContent: 'center',
+        backgroundColor: MAIN_WHITE
     },
-    messageContainer: {
-        padding: 7,
-        borderRadius: 5,
-        marginVertical: 5,
-        backgroundColor: SECOND_WHITE
-    },
-    textInputContainer: {
-        // height: 60,
-        width: '100%',
-        padding: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    textInput: {
-        flex: 1,
-        height: 40,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        backgroundColor: '#F0F0F0'
-    },
-    sendBtn: {
-        height: 40,
-        aspectRatio: 1,
-        borderRadius: 10,
-        backgroundColor: 'grey'
-    }
 })
 
-export default UserMessagesPage
+const mapStateToProps = (state: any) => {
+    return state
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        addMessage: (userId: number, messageText: string) => dispatch(addMessageAC(userId, messageText))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserMessagesPage)

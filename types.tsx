@@ -1,5 +1,7 @@
 export type RootStackParamList = {
-    Root: undefined;
-    Messages: {name: string, message: string}
+    Login: undefined
+    Root: undefined
+    Messages: undefined
+    User: undefined
 };
 

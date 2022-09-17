@@ -11,14 +11,13 @@ interface Props {
 const MessagesTopBarComponent = (props: Props) => {
     return (
         <View style={styles.topBar}>
-
             <TouchableOpacity
                 onPress={() => props.navigation()}
             >
                 <AntDesign name="left" size={30} color="#4F8EF7"/>
             </TouchableOpacity>
             <View style={{flex: 1}}/>
-            <Text>{props.name}</Text>
+            <Text>{props.name ? props.name : 'Profile'}</Text>
             <View style={{flex: 1}}/>
             <AntDesign name="right" size={30} color={'transparent'}/>
         </View>
