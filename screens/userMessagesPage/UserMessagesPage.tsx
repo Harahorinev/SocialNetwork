@@ -7,22 +7,20 @@ import {
     Platform,
 } from 'react-native'
 import {MAIN_WHITE} from "../../constatnts";
-import {addMessageAC, Message} from "../../redux/dialogsReducer";
+import {addMessageAC, Dialog, Message} from "../../redux/dialogsReducer";
 import MessageTextInputComponent from "./components/MessageTextInputComponent";
 import MessagesTopBarComponent from "./components/MessagesTopBarComponent";
 import MessagesListComponent from "./components/MessagesListComponent";
 import {useEffect} from "react";
-import store from "../../redux/store";
 import {useState} from "react";
 import {connect} from "react-redux";
 
 function UserMessagesPage(props: any) {
-
     const [messages, setMessages] = useState<Message[]>([])
     const [name, setName] = useState<string>('')
 
     useEffect(() => {
-        let user = store.getState().dialogsPage.dialogs.find(d => {
+        let user = props.dialogsPage.dialogs.find((d: Dialog) => {
             if (d.userId === props.route.params.userId) {
                 return d
             }

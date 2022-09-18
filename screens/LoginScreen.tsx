@@ -2,9 +2,8 @@ import * as React from 'react'
 import {View, SafeAreaView, Switch, Text, TextInput, StyleSheet, TouchableOpacity} from "react-native"
 import {useEffect, useState} from "react"
 import {connect} from "react-redux"
-import {setAuthUsersData} from "../redux/authReducer"
+import {authMe, authResponse} from "../redux/authReducer"
 import {MAIN_PADDING, SECOND_WHITE} from "../constatnts";
-import {authAPI} from "../api/api";
 
 const LoginScreen = (props: any) => {
     const [login, setLogin] = useState<string>('')
@@ -12,12 +11,7 @@ const LoginScreen = (props: any) => {
     const [rememberMe, setRememberMe] = useState<boolean>(false)
 
     useEffect(() => {
-        authAPI.me().then((response: any) => {
-            if (response.data.resultCode === 0) {
-                props.setAuthUsersData(response.data.data.email, response.data.data.id, response.data.data.login)
-                props.navigation.navigate('Root')
-            }
-        })
+        props.authMe(() => props.navigation.navigate('Root'))
     }, [])
 
     return (
@@ -49,18 +43,9 @@ const LoginScreen = (props: any) => {
                 <View style={{height: 10}}/>
                 <TouchableOpacity
                     style={styles.loginBtn}
-                    onPress={() => {
-                        authAPI.auth(login, password, rememberMe).then((response: any) => {
-                            if (response.data.resultCode === 0) {
-                                props.setAuthUsersData(response.data.data.email, response.data.data.id, response.data.data.login)
-                                props.navigation.navigate('Root')
-                            } else {
-                                console.log(response.data.messages[0])
-                            //    TODO ADD TOASTS
-                            //    npm install react-native-root-toast
-                            }
-                        })
-                    }}
+                    onPress={() => props.authResponse(
+                        login, password, rememberMe,
+                        () => props.navigation.navigate('Root'))}
                 >
                     <Text>Login</Text>
                 </TouchableOpacity>
@@ -88,4 +73,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connect(mapStateToProps, {setAuthUsersData})(LoginScreen)
+export default connect(mapStateToProps, {authMe, authResponse})(LoginScreen)

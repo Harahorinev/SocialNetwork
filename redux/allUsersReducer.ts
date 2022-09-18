@@ -1,3 +1,6 @@
+import {usersAPI} from "../api/api";
+import {REQUEST_QUANTITY_USERS} from "../constatnts";
+
 const ADD_USERS = 'ADD_USERS'
 const IS_FETCHING = 'IS_FETCHING'
 const FETCH_NEXT_PAGE = 'FETCH_NEXT_PAGE'
@@ -70,5 +73,27 @@ export const followStatusChanger = (userId: number) => (
 export const toggleFollowingProgress = (isFetching: boolean, userId: number) => (
     {type: TOGGLE_FOLLOWING_PROGRESS, isFetching, userId}
 )
+
+export const getUsers = (fetching: boolean, page: number) => (dispatch: any) => {
+    if (fetching) {
+        usersAPI.getUsers(page).then((data: any) => {
+            if (Math.ceil(data.totalCount / REQUEST_QUANTITY_USERS) >= page) {
+                dispatch(fetchNextPage(page + 1))
+                dispatch(addUsers(data.items))
+            }
+            dispatch(isFetching(false))
+        })
+    }
+}
+
+export const followUnfollow = (userId: number, userFollowed: boolean) => (dispatch: any) => {
+    dispatch(toggleFollowingProgress(true, userId))
+    usersAPI.userFollower(userFollowed, userId).then((resultCode: any) => {
+        if (resultCode === 0) {
+            dispatch(followStatusChanger(userId))
+        }
+        dispatch(toggleFollowingProgress(false, userId))
+    })
+}
 
 export default allUsersReducer

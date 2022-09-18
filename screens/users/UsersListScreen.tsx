@@ -8,29 +8,14 @@ import {
     View
 } from "react-native";
 import {useEffect} from "react";
-import {MAIN_PADDING, MAIN_WHITE, REQUEST_QUANTITY_USERS} from "../../constatnts";
+import {MAIN_PADDING, MAIN_WHITE} from "../../constatnts";
 import {connect} from "react-redux";
-import {
-    addUsers,
-    fetchNextPage,
-    followStatusChanger,
-    isFetching,
-    toggleFollowingProgress
-} from "../../redux/allUsersReducer";
+import {followUnfollow, getUsers, isFetching} from "../../redux/allUsersReducer";
 import UserComponentForList from "./components/UserComponentForList";
-import {usersAPI} from "../../api/api";
 
 const UsersListScreen = (props: any) => {
     useEffect(() => {
-        if (props.users.fetching) {
-            usersAPI.getUsers(props.users.page).then((data: any) => {
-                    if (Math.ceil(data.totalCount / REQUEST_QUANTITY_USERS) >= props.users.page) {
-                        props.fetchNextPage(props.users.page + 1)
-                        props.addUsers(data.items)
-                    }
-                    props.isFetching(false)
-                })
-        }
+        props.getUsers(props.users.fetching, props.users.page)
     }, [props.users.fetching])
 
     const renderItem: ListRenderItem<any> = (itm: ListRenderItemInfo<any>) => {
@@ -38,11 +23,10 @@ const UsersListScreen = (props: any) => {
             <UserComponentForList navigation={() => props.navigation.navigate('User', {id: itm.item.id})}
                                   name={itm.item.name}
                                   photos={itm.item.photos}
-                                  followStatusChanger={props.followStatusChanger}
                                   id={itm.item.id}
                                   followed={itm.item.followed}
+                                  followUnfollow={props.followUnfollow}
                                   followingInProgress={props.users.followingInProgress}
-                                  toggleFollowingProgress={props.toggleFollowingProgress}
             />
         )
     }
@@ -84,6 +68,4 @@ const mapStateToProps = (state: any) => {
     }
 }
 
-export default connect(mapStateToProps, {
-    addUsers, isFetching, fetchNextPage, followStatusChanger, toggleFollowingProgress
-})(UsersListScreen)
+export default connect(mapStateToProps, {isFetching, getUsers, followUnfollow})(UsersListScreen)
