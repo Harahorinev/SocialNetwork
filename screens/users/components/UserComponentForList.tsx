@@ -1,8 +1,19 @@
 import * as React from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {SECOND_WHITE} from "../../../constatnts";
+import {Photos} from "../../../redux/allUsersReducer";
 
-const UserComponentForList = (props: any) => {
+type Props = {
+    photos: Photos
+    name: string
+    id: number
+    followUnfollow: any
+    navigation: () => void
+    followed: boolean
+    followingInProgress: number[]
+}
+
+const UserComponentForList = (props: Props) => {
     return (
         <View style={styles.userContainer}>
             {props.photos.large

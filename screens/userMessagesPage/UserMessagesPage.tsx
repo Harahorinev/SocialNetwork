@@ -7,20 +7,36 @@ import {
     Platform,
 } from 'react-native'
 import {MAIN_WHITE} from "../../constatnts";
-import {addMessageAC, Dialog, Message} from "../../redux/dialogsReducer";
+import {addMessage, Dialog, Message} from "../../redux/dialogsReducer";
 import MessageTextInputComponent from "./components/MessageTextInputComponent";
 import MessagesTopBarComponent from "./components/MessagesTopBarComponent";
 import MessagesListComponent from "./components/MessagesListComponent";
 import {useEffect} from "react";
 import {useState} from "react";
 import {connect} from "react-redux";
+import {AllStateType} from "../../redux/store";
 
-function UserMessagesPage(props: any) {
+type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
+
+type MapStatePropsType = {
+    dialogs: Dialog[]
+}
+
+type MapDispatchPropsType = {
+    addMessage: (userId: number, messageText: string) => {}
+}
+
+type OwnPropsType = {
+    navigation: any
+    route: any
+}
+
+function UserMessagesPage(props: Props) {
     const [messages, setMessages] = useState<Message[]>([])
     const [name, setName] = useState<string>('')
 
     useEffect(() => {
-        let user = props.dialogsPage.dialogs.find((d: Dialog) => {
+        let user = props.dialogs.find((d: Dialog) => {
             if (d.userId === props.route.params.userId) {
                 return d
             }
@@ -70,14 +86,9 @@ const styles = StyleSheet.create({
     },
 })
 
-const mapStateToProps = (state: any) => {
-    return state
+const mapStateToProps = (state: AllStateType): MapStatePropsType => {
+    return state.dialogsPage
 }
 
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        addMessage: (userId: number, messageText: string) => dispatch(addMessageAC(userId, messageText))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserMessagesPage)
+export default connect<MapStatePropsType, MapDispatchPropsType,
+    OwnPropsType, AllStateType>(mapStateToProps, {addMessage})(UserMessagesPage)

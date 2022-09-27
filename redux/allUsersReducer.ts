@@ -7,7 +7,14 @@ const FETCH_NEXT_PAGE = 'FETCH_NEXT_PAGE'
 const FOLLOW_STATUS_CHANGER = 'FOLLOW_STATUS_CHANGER'
 const TOGGLE_FOLLOWING_PROGRESS = 'TOGGLE_FOLLOWING_PROGRESS'
 
-const allUsersReducer = (state: any = {users: [], fetching: true, page: 1, followingInProgress: []}, action: any) => {
+export type UsersReducerType = {
+    users: UserType[]
+    fetching: boolean
+    page: number
+    followingInProgress: number[]
+}
+
+const allUsersReducer = (state = {users: [], fetching: true, page: 1, followingInProgress: []}, action: any) => {
     switch (action.type) {
         case ADD_USERS: {
             return {
@@ -53,24 +60,57 @@ const allUsersReducer = (state: any = {users: [], fetching: true, page: 1, follo
             return state
     }
 }
+export type Photos = {
+    small: string
+    large: string
+}
 
-export const addUsers = (users: any) => (
+export type UserType = {
+    id: number
+    name: string
+    status: string
+    photos: Photos
+    followed: boolean
+}
+
+type AddUsersType = {
+    type: typeof ADD_USERS,
+    users: UserType[]
+}
+export const addUsers = (users: UserType[]): AddUsersType => (
     {type: ADD_USERS, users}
 )
 
-export const isFetching = (status: any) => (
+type IsFetchingType = {
+    type: typeof IS_FETCHING
+    status: boolean
+}
+export const isFetching = (status: boolean): IsFetchingType => (
     {type: IS_FETCHING, status}
 )
 
-export const fetchNextPage = (pageNum: number) => (
+type FetchNextPageType = {
+    type: typeof FETCH_NEXT_PAGE
+    pageNum: number
+}
+export const fetchNextPage = (pageNum: number): FetchNextPageType => (
     {type: FETCH_NEXT_PAGE, pageNum}
 )
 
-export const followStatusChanger = (userId: number) => (
+type FollowStatusChangerType = {
+    type: typeof FOLLOW_STATUS_CHANGER
+    userId: number
+}
+export const followStatusChanger = (userId: number): FollowStatusChangerType => (
     {type: FOLLOW_STATUS_CHANGER, userId}
 )
 
-export const toggleFollowingProgress = (isFetching: boolean, userId: number) => (
+type ToggleFollowingProgressType = {
+    type: typeof TOGGLE_FOLLOWING_PROGRESS
+    isFetching: boolean
+    userId: number
+}
+export const toggleFollowingProgress = (isFetching: boolean, userId: number): ToggleFollowingProgressType => (
     {type: TOGGLE_FOLLOWING_PROGRESS, isFetching, userId}
 )
 

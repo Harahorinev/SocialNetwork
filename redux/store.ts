@@ -12,6 +12,8 @@ let reducers = combineReducers({
     auth: authReducer,
 })
 
+export type AllStateType = ReturnType<typeof reducers>
+
 let store = createStore(reducers, applyMiddleware(thunk))
 
 export default store

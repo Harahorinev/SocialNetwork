@@ -5,7 +5,7 @@ import {MAIN_WHITE} from "../../../constatnts";
 
 interface Props {
     name: string
-    navigation: any
+    navigation: () => void
 }
 
 const MessagesTopBarComponent = (props: Props) => {

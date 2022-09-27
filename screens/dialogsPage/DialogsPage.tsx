@@ -4,9 +4,18 @@ import {MAIN_PADDING, MAIN_WHITE} from '../../constatnts'
 import UserDialogComponent from './components/UserDialgListComponent'
 import {connect} from "react-redux";
 import {Dialog} from "../../redux/dialogsReducer";
+import {AllStateType} from "../../redux/store";
 
+type Props = MapStatePropsType & OwnPropsType
+type MapStatePropsType = {
+    dialogs: Dialog[]
+}
 
-function DialogsPage(state: any) {
+type OwnPropsType = {
+    navigation: any
+}
+
+function DialogsPage(props: Props) {
     const renderItem: ListRenderItem<Dialog> = (itm: ListRenderItemInfo<Dialog>) => {
         return (
             <UserDialogComponent
@@ -14,7 +23,7 @@ function DialogsPage(state: any) {
                 name={itm.item.name}
                 lastMessage={itm.item.messagesData[itm.item.messagesData.length - 1].message}
                 messages={itm.item.messagesData}
-                navigation={() => state.navigation.replace('Messages', {userId: itm.item.userId})}
+                navigation={() => props.navigation.replace('Messages', {userId: itm.item.userId})}
             />
         )
     }
@@ -22,7 +31,7 @@ function DialogsPage(state: any) {
     return (
         <View style={styles.container}>
             <FlatList
-                data={state.dialogs}
+                data={props.dialogs}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.userId.toString()}
             />
@@ -40,8 +49,8 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AllStateType): MapStatePropsType => {
     return state.dialogsPage
 }
 
-export default connect(mapStateToProps)(DialogsPage)
+export default connect<MapStatePropsType, null, OwnPropsType, AllStateType>(mapStateToProps)(DialogsPage)

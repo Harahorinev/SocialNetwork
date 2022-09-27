@@ -2,11 +2,11 @@ import * as React from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import {MessagesData, SECOND_WHITE} from "../../../constatnts";
 
-interface UserDialog {
+type UserDialog = {
     name: string
     lastMessage: string
     messages: MessagesData[]
-    navigation: any
+    navigation: () => void
 }
 
 function UserDialogComponent(props: UserDialog) {

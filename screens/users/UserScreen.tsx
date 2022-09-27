@@ -5,9 +5,13 @@ import MessagesTopBarComponent from "../userMessagesPage/components/MessagesTopB
 import {useEffect, useState} from "react";
 import {profileAPI} from "../../api/api";
 
-const UserScreen = (props: any) => {
+type Props = {
+    route: any
+    navigation: any
+}
+
+const UserScreen = (props: Props) => {
     const [userName, setUserName] = useState<string>('')
-    // const [ava, setAva] = useState()
 
     useEffect(() => {
         profileAPI.getProfile(props.route.params.id).then((data: any) => {

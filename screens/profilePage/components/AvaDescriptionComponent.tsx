@@ -12,9 +12,9 @@ import {MAIN_PADDING, MAIN_WHITE, SECOND_WHITE} from '../../../constatnts'
 import {useState} from "react";
 
 interface Props {
-    ava: any
+    ava: HTMLImageElement
     description: string
-    addPost: any
+    addPost: (postText: string) => {}
 }
 
 function AvaDescriptionComponent(props: Props) {

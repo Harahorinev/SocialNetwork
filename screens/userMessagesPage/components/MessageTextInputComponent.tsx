@@ -6,7 +6,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 interface Props {
     userId: number
-    addMessage: any
+    addMessage: (userId: number, messageText: string) => {}
 }
 
 const MessageTextInputComponent = (props: Props) => {

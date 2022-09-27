@@ -1,15 +1,17 @@
 import {authAPI} from "../api/api";
 
-const SET_USERS_DATA = 'SET_USERS_DATA '
+const SET_USERS_DATA = 'SET_USERS_DATA'
 
-const INITIAL_STATE = {
-    id: null,
-    email: null,
-    login: null,
-    isAuth: false
+const AUTH_STATE = {
+    id: null as number | null,
+    email: null as string | null,
+    login: null as string | null,
+    isAuth: false as boolean
 }
 
-const authReducer = (state = INITIAL_STATE, action: any) => {
+export type AuthStateType = typeof AUTH_STATE
+
+const authReducer = (state = AUTH_STATE, action: any) => {
     switch (action.type) {
         case SET_USERS_DATA: {
             return {
@@ -23,7 +25,17 @@ const authReducer = (state = INITIAL_STATE, action: any) => {
     }
 }
 
-export const setAuthUsersData = (email: string, id: number, login: string) => {
+type DataType = {
+    email: string
+    id: number
+    login: string
+}
+
+type SetAuthUsersDataType = {
+    type: typeof SET_USERS_DATA,
+    data: DataType
+}
+export const setAuthUsersData = (email: string, id: number, login: string): SetAuthUsersDataType => {
     return {
         type: SET_USERS_DATA,
         data: {

@@ -1,12 +1,12 @@
 const ADD_POST = 'ADD_POST'
 
 export interface ProfileState {
-    ava: any
+    ava: HTMLImageElement
     description: string
-    posts: Post[]
+    posts: PostType[]
 }
 
-interface Post {
+export type PostType = {
     id: number
     postText: string
     likesCounter: number
@@ -46,10 +46,10 @@ export const addPost = (newPostContent: string) => (
     }
 );
 
-const profileReducer = (state: ProfileState = INITIAL_STATE, action: Action) => {
+const profileReducer = (state = INITIAL_STATE, action: Action) => {
     switch (action.type) {
         case ADD_POST:
-            let newPost: Post = {
+            let newPost: PostType = {
                 id: state.posts[state.posts.length - 1].id + 1,
                 postText: action.newPostContent,
                 likesCounter: 0

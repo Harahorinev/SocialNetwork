@@ -1,19 +1,14 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { MAIN_PADDING, MAIN_WHITE, SECOND_WHITE } from '../../../constatnts'
-import Post from './PostComponent'
+import {PostType} from "../../../redux/profileReducer";
+import Post from "./PostComponent";
 
-interface PostData {
-    id: number
-    postText: string
-    likesCounter: number
-}
-
-function PostsContainer(props: any) {
+function PostsContainer({posts}: {posts: PostType[]}) {
     return (
         <View style={styles.lowPostsContainer}>
             <View style={styles.highPostsContainer}>
-                {props.posts.slice().reverse().map((post: PostData) => {
+                {posts.slice().reverse().map((post) => {
                     return <Post key={post.id} postText={post.postText} postLikes={post.likesCounter}/>
                 })}
             </View>

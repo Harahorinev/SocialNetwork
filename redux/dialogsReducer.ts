@@ -15,12 +15,6 @@ export interface Message {
     message: string
 }
 
-interface Action {
-    type: string
-    userId: number
-    newMessageContent: string
-}
-
 let INITIAL_STATE: DialogsState = {
     dialogs: [
         {
@@ -122,15 +116,7 @@ let INITIAL_STATE: DialogsState = {
     ]
 }
 
-export const addMessageAC = (userId: number, newMessageText: string) => (
-    {
-        type: ADD_NEW_MESSAGE,
-        userId: userId,
-        newMessageContent: newMessageText
-    }
-)
-
-const dialogsReducer = (state: DialogsState = INITIAL_STATE, action: Action) => {
+const dialogsReducer = (state: DialogsState = INITIAL_STATE, action: any) => {
     switch (action.type) {
         case ADD_NEW_MESSAGE: {
             let newDialogs = state.dialogs.map(d => {
@@ -156,5 +142,19 @@ const dialogsReducer = (state: DialogsState = INITIAL_STATE, action: Action) => 
             return state
     }
 }
+
+type AddMessageACType = {
+    type: typeof ADD_NEW_MESSAGE
+    userId: number
+    newMessageContent: string
+}
+
+export const addMessage = (userId: number, newMessageText: string): AddMessageACType => (
+    {
+        type: ADD_NEW_MESSAGE,
+        userId: userId,
+        newMessageContent: newMessageText
+    }
+)
 
 export default dialogsReducer

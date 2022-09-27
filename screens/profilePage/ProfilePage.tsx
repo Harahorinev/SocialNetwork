@@ -5,15 +5,29 @@ import {SECOND_WHITE} from "../../constatnts";
 import AvaDescriptionComponent from "./components/AvaDescriptionComponent";
 import PostsContainer from "./components/PostsContainer";
 import {connect} from "react-redux";
-import {addPost} from "../../redux/profileReducer";
+import {addPost, ProfileState} from "../../redux/profileReducer";
+import {AllStateType} from "../../redux/store";
+import {AuthStateType} from "../../redux/authReducer";
 
-function ProfilePage(props: any) {
+type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType & AllStateType
+type MapStatePropsType = {
+    profilePage: ProfileState,
+    userInfo: AuthStateType
+}
+type MapDispatchPropsType = {
+    addPost: (postText: string) => {}
+}
+type OwnPropsType = {
+    navigation: any
+}
+
+function ProfilePage(props: Props) {
     return (
         <ScrollView style={styles.container}>
             <AvaDescriptionComponent
                 ava={props.profilePage.ava}
                 description={props.profilePage.description}
-                addPost={props.profilePage.createPost}
+                addPost={props.addPost}
             />
             <PostsContainer posts={props.profilePage.posts}/>
         </ScrollView>
@@ -27,18 +41,12 @@ const styles = StyleSheet.create({
     },
 })
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AllStateType): MapStatePropsType => {
     return {
         profilePage: state.profilePage,
         userInfo: state.auth
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
-    // TODO add type
-    return {
-        createPost: (postText: string) => dispatch(addPost(postText))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+export default connect<MapStatePropsType, MapDispatchPropsType,
+    OwnPropsType, AllStateType>(mapStateToProps, {addPost})(ProfilePage);

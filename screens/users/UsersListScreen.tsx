@@ -10,15 +10,32 @@ import {
 import {useEffect} from "react";
 import {MAIN_PADDING, MAIN_WHITE} from "../../constatnts";
 import {connect} from "react-redux";
-import {followUnfollow, getUsers, isFetching} from "../../redux/allUsersReducer";
+import {followUnfollow, getUsers, isFetching, UsersReducerType, UserType} from "../../redux/allUsersReducer";
 import UserComponentForList from "./components/UserComponentForList";
+import {AllStateType} from "../../redux/store";
 
-const UsersListScreen = (props: any) => {
+type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
+
+type MapStatePropsType = {
+    users: UsersReducerType
+}
+
+type MapDispatchPropsType = {
+    isFetching: (status: boolean) => {}
+    getUsers: any
+    followUnfollow: any
+}
+
+type OwnPropsType = {
+    navigation: any
+}
+
+const UsersListScreen = (props: Props) => {
     useEffect(() => {
         props.getUsers(props.users.fetching, props.users.page)
     }, [props.users.fetching])
 
-    const renderItem: ListRenderItem<any> = (itm: ListRenderItemInfo<any>) => {
+    const renderItem: ListRenderItem<UserType> = (itm: ListRenderItemInfo<UserType>) => {
         return (
             <UserComponentForList navigation={() => props.navigation.navigate('User', {id: itm.item.id})}
                                   name={itm.item.name}
@@ -62,10 +79,11 @@ const styles = StyleSheet.create({
     },
 })
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AllStateType): MapStatePropsType => {
     return {
         users: state.usersPage
     }
 }
 
-export default connect(mapStateToProps, {isFetching, getUsers, followUnfollow})(UsersListScreen)
+export default connect<MapStatePropsType, MapDispatchPropsType,
+    OwnPropsType, AllStateType>(mapStateToProps, {isFetching, getUsers, followUnfollow})(UsersListScreen)
