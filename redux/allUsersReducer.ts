@@ -1,11 +1,21 @@
 import {usersAPI} from "../api/api";
 import {REQUEST_QUANTITY_USERS} from "../constatnts";
+import {ThunkAction} from "redux-thunk";
+import {AllStateType} from "./store";
 
 const ADD_USERS = 'ADD_USERS'
 const IS_FETCHING = 'IS_FETCHING'
 const FETCH_NEXT_PAGE = 'FETCH_NEXT_PAGE'
 const FOLLOW_STATUS_CHANGER = 'FOLLOW_STATUS_CHANGER'
 const TOGGLE_FOLLOWING_PROGRESS = 'TOGGLE_FOLLOWING_PROGRESS'
+
+type ActionsTypes = AddUsersType
+    | IsFetchingType
+    | FetchNextPageType
+    | FollowStatusChangerType
+    | ToggleFollowingProgressType
+
+type ThunksType = ThunkAction<Promise<void>, AllStateType, any, ActionsTypes>
 
 export type UsersReducerType = {
     users: UserType[]
@@ -14,7 +24,12 @@ export type UsersReducerType = {
     followingInProgress: number[]
 }
 
-const allUsersReducer = (state = {users: [], fetching: true, page: 1, followingInProgress: []}, action: any) => {
+const allUsersReducer = (state = {
+    users: [],
+    fetching: true,
+    page: 1,
+    followingInProgress: []
+}, action: ActionsTypes) => {
     switch (action.type) {
         case ADD_USERS: {
             return {
@@ -114,9 +129,10 @@ export const toggleFollowingProgress = (isFetching: boolean, userId: number): To
     {type: TOGGLE_FOLLOWING_PROGRESS, isFetching, userId}
 )
 
-export const getUsers = (fetching: boolean, page: number) => (dispatch: any) => {
+export const getUsers = (fetching: boolean, page: number)
+    : ThunksType => async (dispatch) => {
     if (fetching) {
-        usersAPI.getUsers(page).then((data: any) => {
+        usersAPI.getUsers(page).then((data) => {
             if (Math.ceil(data.totalCount / REQUEST_QUANTITY_USERS) >= page) {
                 dispatch(fetchNextPage(page + 1))
                 dispatch(addUsers(data.items))
@@ -126,9 +142,10 @@ export const getUsers = (fetching: boolean, page: number) => (dispatch: any) => 
     }
 }
 
-export const followUnfollow = (userId: number, userFollowed: boolean) => (dispatch: any) => {
+export const followUnfollow = (userId: number, userFollowed: boolean)
+    : ThunksType => async (dispatch) => {
     dispatch(toggleFollowingProgress(true, userId))
-    usersAPI.userFollower(userFollowed, userId).then((resultCode: any) => {
+    usersAPI.userFollower(userFollowed, userId).then((resultCode) => {
         if (resultCode === 0) {
             dispatch(followStatusChanger(userId))
         }

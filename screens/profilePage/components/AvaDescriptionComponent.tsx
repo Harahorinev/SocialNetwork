@@ -12,6 +12,7 @@ import {MAIN_PADDING, MAIN_WHITE, SECOND_WHITE} from '../../../constatnts'
 import {useState} from "react";
 
 interface Props {
+    login: string
     ava: HTMLImageElement
     description: string
     addPost: (postText: string) => {}
@@ -23,6 +24,7 @@ function AvaDescriptionComponent(props: Props) {
         <View style={styles.lowContainer}>
             <TouchableWithoutFeedback>
                 <View style={styles.highContainer}>
+                    <Text>{props.login}</Text>
                     <View style={styles.avaDescriptionContainer}>
                         <Image
                             style={styles.ava}

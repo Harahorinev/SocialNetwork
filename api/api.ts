@@ -9,6 +9,11 @@ export const instance = axios.create({
     }
 })
 
+export enum ResultCodes {
+    Success = 0,
+    Error = 1,
+    CaptchaRequired = 10
+}
 
 export const usersAPI = {
     getUsers(page: number) {
@@ -33,16 +38,57 @@ export const usersAPI = {
         )
     },
 }
+
+type MeR = {
+    data: {
+        email: string
+        id: number
+        login: string
+    }
+    resultCode: ResultCodes
+    messages: string[]
+}
+
+
+type AuthLoginR = {
+    data: {
+        userId: number
+    }
+    resultCode: ResultCodes
+    messages: string[]
+}
+
+type ProfileR = {
+    userId: number
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    fullName: string
+    contacts: {
+        github: string
+        vk: string
+        facebook: string
+        instagram: string
+        twitter: string
+        website: string
+        youtube: string
+        mainLink: string
+    }
+    photos: {
+        small: string
+        large: string
+    }
+}
+
 export const authAPI = {
     me() {
         return (
-            instance.get(`auth/me`)
+            instance.get<MeR>(`auth/me`)
         )
     },
 
     auth(email: string, password: string, rememberMe: boolean) {
         return (
-            instance.post(`auth/login`, {
+            instance.post<AuthLoginR>(`auth/login`, {
                 email: email,
                 password: password,
                 rememberMe: rememberMe
@@ -54,8 +100,8 @@ export const authAPI = {
 export const profileAPI = {
     getProfile(id: number) {
         return (
-            instance.get(`profile/${id}`)
-                .then(response => {
+            instance.get<ProfileR>(`profile/${id}`)
+                .then((response) => {
                     if (response) {
                         return response.data
                     }

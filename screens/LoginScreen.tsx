@@ -4,6 +4,7 @@ import {useEffect, useState} from "react"
 import {connect} from "react-redux"
 import {authMe, authResponse} from "../redux/authReducer"
 import {MAIN_PADDING, SECOND_WHITE} from "../constatnts";
+import {AllStateType} from "../redux/store";
 
 const LoginScreen = (props: any) => {
     const [login, setLogin] = useState<string>('')
@@ -54,7 +55,7 @@ const LoginScreen = (props: any) => {
     )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AllStateType) => {
     return {...state}
 }
 

@@ -14,8 +14,10 @@ const UserScreen = (props: Props) => {
     const [userName, setUserName] = useState<string>('')
 
     useEffect(() => {
-        profileAPI.getProfile(props.route.params.id).then((data: any) => {
-            setUserName(data.fullName)
+        profileAPI.getProfile(props.route.params.id).then((data) => {
+            if (data) {
+                setUserName(data.fullName)
+            }
         })
     }, [])
     return (

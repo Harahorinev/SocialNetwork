@@ -25,6 +25,7 @@ function ProfilePage(props: Props) {
     return (
         <ScrollView style={styles.container}>
             <AvaDescriptionComponent
+                login={props.userInfo.login ? props.userInfo.login : ''}
                 ava={props.profilePage.ava}
                 description={props.profilePage.description}
                 addPost={props.addPost}

@@ -12,7 +12,7 @@ export type PostType = {
     likesCounter: number
 }
 
-interface Action {
+type Action = {
     type: string
     newPostContent: string
 }
