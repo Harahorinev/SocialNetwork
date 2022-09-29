@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {SECOND_WHITE} from "../../../constatnts";
-import {Photos} from "../../../redux/allUsersReducer";
+import {Photos} from "../../../redux/allUsersR";
 
 type Props = {
     photos: Photos

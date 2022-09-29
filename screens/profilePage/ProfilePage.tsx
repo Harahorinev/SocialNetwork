@@ -5,23 +5,27 @@ import {SECOND_WHITE} from "../../constatnts";
 import AvaDescriptionComponent from "./components/AvaDescriptionComponent";
 import PostsContainer from "./components/PostsContainer";
 import {connect} from "react-redux";
-import {addPost, ProfileState} from "../../redux/profileReducer";
+import {addPostAC, ProfileStateT} from "../../redux/userPostsR";
 import {AllStateType} from "../../redux/store";
-import {AuthStateType} from "../../redux/authReducer";
+import {AuthStateT} from "../../redux/authR";
+import {NativeStackNavigationProp} from "react-native-screens/native-stack";
+import {DrawerParamList} from "../../types";
+import {RouteProp} from "@react-navigation/native";
 
-type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType & AllStateType
+type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
 type MapStatePropsType = {
-    profilePage: ProfileState,
-    userInfo: AuthStateType
+    profilePage: ProfileStateT,
+    userInfo: AuthStateT
 }
 type MapDispatchPropsType = {
     addPost: (postText: string) => {}
 }
 type OwnPropsType = {
-    navigation: any
+    navigation: NativeStackNavigationProp<DrawerParamList>
+    route: RouteProp<DrawerParamList, 'Profile'>
 }
 
-function ProfilePage(props: Props) {
+const ProfilePage = (props: Props) => {
     return (
         <ScrollView style={styles.container}>
             <AvaDescriptionComponent
@@ -50,4 +54,4 @@ const mapStateToProps = (state: AllStateType): MapStatePropsType => {
 }
 
 export default connect<MapStatePropsType, MapDispatchPropsType,
-    OwnPropsType, AllStateType>(mapStateToProps, {addPost})(ProfilePage);
+    OwnPropsType, AllStateType>(mapStateToProps, {addPost: addPostAC})(ProfilePage);

@@ -3,8 +3,11 @@ import {View, StyleSheet, FlatList, ListRenderItem, ListRenderItemInfo} from 're
 import {MAIN_PADDING, MAIN_WHITE} from '../../constatnts'
 import UserDialogComponent from './components/UserDialgListComponent'
 import {connect} from "react-redux";
-import {Dialog} from "../../redux/dialogsReducer";
+import {Dialog} from "../../redux/dialogsR";
 import {AllStateType} from "../../redux/store";
+import {NativeStackNavigationProp} from "react-native-screens/native-stack";
+import {DrawerParamList, RootStackParamList} from "../../types";
+import {RouteProp} from "@react-navigation/native";
 
 type Props = MapStatePropsType & OwnPropsType
 type MapStatePropsType = {
@@ -12,7 +15,8 @@ type MapStatePropsType = {
 }
 
 type OwnPropsType = {
-    navigation: any
+    navigation: NativeStackNavigationProp<RootStackParamList>
+    route: RouteProp<DrawerParamList, 'Dialogs'>
 }
 
 function DialogsPage(props: Props) {

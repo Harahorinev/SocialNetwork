@@ -1,23 +1,25 @@
 const ADD_POST = 'ADD_POST'
 
-export interface ProfileState {
+export type ProfileStateT = {
     ava: HTMLImageElement
     description: string
-    posts: PostType[]
+    posts: PostT[]
 }
 
-export type PostType = {
+type AddPostT = {
+    type: string
+    newPostContent: string
+}
+
+type PostsActionsT = AddPostT
+
+export type PostT = {
     id: number
     postText: string
     likesCounter: number
 }
 
-type Action = {
-    type: string
-    newPostContent: string
-}
-
-const INITIAL_STATE: ProfileState = {
+const userPostsState: ProfileStateT = {
     ava: require('../assets/images/ava.jpeg'),
     description: 'Description',
     posts: [
@@ -39,17 +41,17 @@ const INITIAL_STATE: ProfileState = {
     ],
 }
 
-export const addPost = (newPostContent: string) => (
+export const addPostAC = (newPostContent: string) => (
     {
         type: ADD_POST,
         newPostContent: newPostContent
     }
 );
 
-const profileReducer = (state = INITIAL_STATE, action: Action) => {
+const userPostsR = (state = userPostsState, action: PostsActionsT) => {
     switch (action.type) {
         case ADD_POST:
-            let newPost: PostType = {
+            let newPost: PostT = {
                 id: state.posts[state.posts.length - 1].id + 1,
                 postText: action.newPostContent,
                 likesCounter: 0
@@ -63,4 +65,4 @@ const profileReducer = (state = INITIAL_STATE, action: Action) => {
     }
 }
 
-export default profileReducer
+export default userPostsR

@@ -6,15 +6,31 @@ import MusicPage from "./screens/MusicPage";
 import DialogsPage from "./screens/dialogsPage/DialogsPage";
 import UserMessagesPage from "./screens/userMessagesPage/UserMessagesPage";
 import {createStackNavigator} from "@react-navigation/stack";
-import {RootStackParamList} from "./types";
+import {DrawerParamList, RootStackParamList} from "./types";
 import UsersPage from "./screens/users/UsersListScreen";
 import UserScreen from "./screens/users/UserScreen";
 import LoginScreen from "./screens/LoginScreen";
+import {NativeStackNavigationProp} from "react-native-screens/native-stack";
+import {RouteProp} from "@react-navigation/native";
 
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<DrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
-function DrawerNavigator(initialParams: any) {
+type InitialParams = {
+    initialRouteName: InitialRouteName
+}
+enum InitialRouteName {
+    Profile = 'Profile',
+    Dialogs = 'Dialogs',
+    Users = 'Users'
+}
+
+type Props = {
+    navigation: NativeStackNavigationProp<RootStackParamList>
+    route: RouteProp<RootStackParamList, 'Root'>
+}
+
+function DrawerNavigator(initialParams: InitialParams) {
     return (
         <Drawer.Navigator initialRouteName={initialParams.initialRouteName}>
             <Drawer.Screen name="Profile" component={ProfilePage} options={{headerShown: true}}/>
@@ -37,8 +53,10 @@ function StackNavigator() {
     )
 }
 
-const DrawerNew = (props: any) => {
-    let initialRouteName = props.route.params && props.route.params.initialRouteName ? props.route.params.initialRouteName : 'Profile'
+const DrawerNew = (props: Props) => {
+    let initialRouteName: InitialRouteName = props.route.params && props.route.params.initialRouteName
+        ? InitialRouteName[props.route.params.initialRouteName as keyof typeof InitialRouteName]
+        : InitialRouteName.Profile
     return (
         <DrawerNavigator initialRouteName={initialRouteName} {...props} />
     )

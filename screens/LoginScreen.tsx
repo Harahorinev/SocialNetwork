@@ -2,17 +2,37 @@ import * as React from 'react'
 import {View, SafeAreaView, Switch, Text, TextInput, StyleSheet, TouchableOpacity} from "react-native"
 import {useEffect, useState} from "react"
 import {connect} from "react-redux"
-import {authMe, authResponse} from "../redux/authReducer"
+import {authMe, authResponse} from "../redux/authR"
 import {MAIN_PADDING, SECOND_WHITE} from "../constatnts";
 import {AllStateType} from "../redux/store";
+import {NativeStackNavigationProp} from "react-native-screens/native-stack";
+import {RootStackParamList} from "../types";
+import {RouteProp} from "@react-navigation/native";
 
-const LoginScreen = (props: any) => {
+type Props = DispatchProps & OwnProps
+
+type StateProps = {}
+
+type DispatchProps = {
+    authMe: (navigation: () => void) => {}
+    authResponse: (login: string,
+                   password: string,
+                   rememberMe: boolean,
+                   navigation: () => void) => void
+}
+
+type OwnProps = {
+    navigation: NativeStackNavigationProp<RootStackParamList>
+    route: RouteProp<RootStackParamList, 'Login'>
+}
+
+const LoginScreen = (props: Props) => {
     const [login, setLogin] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [rememberMe, setRememberMe] = useState<boolean>(false)
 
     useEffect(() => {
-        props.authMe(() => props.navigation.navigate('Root'))
+        props.authMe(() => props.navigation.replace('Root'))
     }, [])
 
     return (
@@ -46,17 +66,13 @@ const LoginScreen = (props: any) => {
                     style={styles.loginBtn}
                     onPress={() => props.authResponse(
                         login, password, rememberMe,
-                        () => props.navigation.navigate('Root'))}
+                        () => props.navigation.replace('Root'))}
                 >
                     <Text>Login</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
     )
-}
-
-const mapStateToProps = (state: AllStateType) => {
-    return {...state}
 }
 
 const styles = StyleSheet.create({
@@ -74,4 +90,5 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connect(mapStateToProps, {authMe, authResponse})(LoginScreen)
+export default connect<StateProps, DispatchProps,
+    OwnProps, AllStateType>(null, {authMe, authResponse})(LoginScreen)

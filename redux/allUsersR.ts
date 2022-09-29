@@ -10,26 +10,23 @@ const FOLLOW_STATUS_CHANGER = 'FOLLOW_STATUS_CHANGER'
 const TOGGLE_FOLLOWING_PROGRESS = 'TOGGLE_FOLLOWING_PROGRESS'
 
 type ActionsTypes = AddUsersType
-    | IsFetchingType
-    | FetchNextPageType
-    | FollowStatusChangerType
-    | ToggleFollowingProgressType
+    | IsFetchingT
+    | FetchNextPageT
+    | FollowStatusChangerT
+    | ToggleFollowingProgressT
 
 type ThunksType = ThunkAction<Promise<void>, AllStateType, any, ActionsTypes>
 
-export type UsersReducerType = {
-    users: UserType[]
-    fetching: boolean
-    page: number
-    followingInProgress: number[]
+export type UsersRT = typeof usersStateR
+
+const usersStateR = {
+    users: [] as UserT[],
+    fetching: true as boolean,
+    page: 1 as number,
+    followingInProgress: [] as number[]
 }
 
-const allUsersReducer = (state = {
-    users: [],
-    fetching: true,
-    page: 1,
-    followingInProgress: []
-}, action: ActionsTypes) => {
+const allUsersR = (state = usersStateR, action: ActionsTypes) => {
     switch (action.type) {
         case ADD_USERS: {
             return {
@@ -52,7 +49,7 @@ const allUsersReducer = (state = {
         case FOLLOW_STATUS_CHANGER: {
             return {
                 ...state,
-                users: state.users.map((us: any) => {
+                users: state.users.map((us) => {
                     if (us.id === action.userId) {
                         return {
                             ...us,
@@ -80,7 +77,7 @@ export type Photos = {
     large: string
 }
 
-export type UserType = {
+export type UserT = {
     id: number
     name: string
     status: string
@@ -90,42 +87,42 @@ export type UserType = {
 
 type AddUsersType = {
     type: typeof ADD_USERS,
-    users: UserType[]
+    users: UserT[]
 }
-export const addUsers = (users: UserType[]): AddUsersType => (
+export const addUsers = (users: UserT[]): AddUsersType => (
     {type: ADD_USERS, users}
 )
 
-type IsFetchingType = {
+type IsFetchingT = {
     type: typeof IS_FETCHING
     status: boolean
 }
-export const isFetching = (status: boolean): IsFetchingType => (
+export const isFetching = (status: boolean): IsFetchingT => (
     {type: IS_FETCHING, status}
 )
 
-type FetchNextPageType = {
+type FetchNextPageT = {
     type: typeof FETCH_NEXT_PAGE
     pageNum: number
 }
-export const fetchNextPage = (pageNum: number): FetchNextPageType => (
+export const fetchNextPage = (pageNum: number): FetchNextPageT => (
     {type: FETCH_NEXT_PAGE, pageNum}
 )
 
-type FollowStatusChangerType = {
+type FollowStatusChangerT = {
     type: typeof FOLLOW_STATUS_CHANGER
     userId: number
 }
-export const followStatusChanger = (userId: number): FollowStatusChangerType => (
+export const followStatusChanger = (userId: number): FollowStatusChangerT => (
     {type: FOLLOW_STATUS_CHANGER, userId}
 )
 
-type ToggleFollowingProgressType = {
+type ToggleFollowingProgressT = {
     type: typeof TOGGLE_FOLLOWING_PROGRESS
     isFetching: boolean
     userId: number
 }
-export const toggleFollowingProgress = (isFetching: boolean, userId: number): ToggleFollowingProgressType => (
+export const toggleFollowingProgress = (isFetching: boolean, userId: number): ToggleFollowingProgressT => (
     {type: TOGGLE_FOLLOWING_PROGRESS, isFetching, userId}
 )
 
@@ -153,4 +150,4 @@ export const followUnfollow = (userId: number, userFollowed: boolean)
     })
 }
 
-export default allUsersReducer
+export default allUsersR

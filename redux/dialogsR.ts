@@ -1,21 +1,23 @@
 const ADD_NEW_MESSAGE = 'ADD_NEW_MESSAGE'
 
-export interface DialogsState {
+export type DialogsStateT = {
     dialogs: Dialog[]
 }
 
-export interface Dialog {
+export type Dialog = {
     userId: number,
     name: string,
     messagesData: Message[]
 }
 
-export interface Message {
+export type Message = {
     id: number
     message: string
 }
 
-let INITIAL_STATE: DialogsState = {
+type DialogsActionsT = AddMessageACT
+
+let dialogsState: DialogsStateT = {
     dialogs: [
         {
             userId: 1,
@@ -116,7 +118,7 @@ let INITIAL_STATE: DialogsState = {
     ]
 }
 
-const dialogsReducer = (state: DialogsState = INITIAL_STATE, action: any) => {
+const dialogsR = (state: DialogsStateT = dialogsState, action: DialogsActionsT) => {
     switch (action.type) {
         case ADD_NEW_MESSAGE: {
             let newDialogs = state.dialogs.map(d => {
@@ -143,13 +145,13 @@ const dialogsReducer = (state: DialogsState = INITIAL_STATE, action: any) => {
     }
 }
 
-type AddMessageACType = {
+type AddMessageACT = {
     type: typeof ADD_NEW_MESSAGE
     userId: number
     newMessageContent: string
 }
 
-export const addMessage = (userId: number, newMessageText: string): AddMessageACType => (
+export const addMessage = (userId: number, newMessageText: string): AddMessageACT => (
     {
         type: ADD_NEW_MESSAGE,
         userId: userId,
@@ -157,4 +159,4 @@ export const addMessage = (userId: number, newMessageText: string): AddMessageAC
     }
 )
 
-export default dialogsReducer
+export default dialogsR

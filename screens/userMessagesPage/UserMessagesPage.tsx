@@ -7,7 +7,7 @@ import {
     Platform,
 } from 'react-native'
 import {MAIN_WHITE} from "../../constatnts";
-import {addMessage, Dialog, Message} from "../../redux/dialogsReducer";
+import {addMessage, Dialog, Message} from "../../redux/dialogsR";
 import MessageTextInputComponent from "./components/MessageTextInputComponent";
 import MessagesTopBarComponent from "./components/MessagesTopBarComponent";
 import MessagesListComponent from "./components/MessagesListComponent";
@@ -15,6 +15,9 @@ import {useEffect} from "react";
 import {useState} from "react";
 import {connect} from "react-redux";
 import {AllStateType} from "../../redux/store";
+import {NativeStackNavigationProp} from "react-native-screens/native-stack";
+import {RootStackParamList} from "../../types";
+import {RouteProp} from "@react-navigation/native";
 
 type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
 
@@ -27,8 +30,8 @@ type MapDispatchPropsType = {
 }
 
 type OwnPropsType = {
-    navigation: any
-    route: any
+    navigation: NativeStackNavigationProp<RootStackParamList>
+    route: RouteProp<RootStackParamList, 'Messages'>
 }
 
 function UserMessagesPage(props: Props) {

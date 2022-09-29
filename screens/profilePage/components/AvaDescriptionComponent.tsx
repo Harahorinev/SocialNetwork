@@ -15,7 +15,7 @@ interface Props {
     login: string
     ava: HTMLImageElement
     description: string
-    addPost: (postText: string) => {}
+    addPost: ((postText: string) => {}) | null
 }
 
 function AvaDescriptionComponent(props: Props) {
@@ -35,26 +35,29 @@ function AvaDescriptionComponent(props: Props) {
                             <Text>{props.description}</Text>
                         </View>
                     </View>
-                    <View style={styles.newPostContainer}>
-                        <View style={styles.textNewPostContainer}>
-                            <TextInput
-                                style={styles.textInput}
-                                multiline={true}
-                                value={postText}
-                                onChangeText={(text) => setPostText(text)}
-                            />
+                    {props.addPost
+                        ? <View style={styles.newPostContainer}>
+                            <View style={styles.textNewPostContainer}>
+                                <TextInput
+                                    style={styles.textInput}
+                                    multiline={true}
+                                    value={postText}
+                                    onChangeText={(text) => setPostText(text)}
+                                />
+                            </View>
+                            <TouchableOpacity
+                                style={styles.addNewPostBtn}
+                                disabled={!postText}
+                                onPress={() => {
+                                    props.addPost!(postText)
+                                    setPostText('')
+                                }}
+                            >
+                                <Text>Add</Text>
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity
-                            style={styles.addNewPostBtn}
-                            disabled={!postText}
-                            onPress={() => {
-                                props.addPost(postText)
-                                setPostText('')
-                            }}
-                        >
-                            <Text>Add</Text>
-                        </TouchableOpacity>
-                    </View>
+                        : null
+                    }
                 </View>
             </TouchableWithoutFeedback>
         </View>

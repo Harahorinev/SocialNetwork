@@ -4,18 +4,18 @@ import {AllStateType} from "./store";
 
 const SET_USERS_DATA = 'SET_USERS_DATA'
 
-const AUTH_STATE = {
+const authStateR = {
     id: null as number | null,
     email: null as string | null,
     login: null as string | null,
     isAuth: false as boolean
 }
 
-export type AuthStateType = typeof AUTH_STATE
-type ActionsType = SetAuthUserDataType
-type ThunksType = ThunkAction<Promise<void>, AllStateType, unknown, ActionsType>
+export type AuthStateT = typeof authStateR
+export type AuthActionsT = SetAuthUserDataT
+type ThunksType = ThunkAction<Promise<void>, AllStateType, unknown, AuthActionsT>
 
-const authReducer = (state = AUTH_STATE, action: any) => {
+const authR = (state = authStateR, action: AuthActionsT) => {
     switch (action.type) {
         case SET_USERS_DATA: {
             return {
@@ -35,12 +35,12 @@ type DataType = {
     login: string
 }
 
-type SetAuthUserDataType = {
+type SetAuthUserDataT = {
     type: typeof SET_USERS_DATA,
     data: DataType
 }
 
-export const setAuthUserData = (email: string, id: number, login: string): SetAuthUserDataType => {
+export const setAuthUserData = (email: string, id: number, login: string): SetAuthUserDataT => {
     return {
         type: SET_USERS_DATA,
         data: {
@@ -51,7 +51,7 @@ export const setAuthUserData = (email: string, id: number, login: string): SetAu
     }
 }
 
-export const authMe = (navigation: any): ThunksType => async (dispatch) => {
+export const authMe = (navigation: () => void): ThunksType => async (dispatch) => {
     let response = await authAPI.me()
     if (response.data.resultCode === 0) {
         dispatch(setAuthUserData(response.data.data.email, response.data.data.id, response.data.data.login))
@@ -59,7 +59,7 @@ export const authMe = (navigation: any): ThunksType => async (dispatch) => {
     }
 }
 
-export const authResponse = (login: string, password: string, rememberMe: boolean, navigation: any)
+export const authResponse = (login: string, password: string, rememberMe: boolean, navigation: () => void)
     : ThunksType => async (dispatch) => {
     let response = await authAPI.auth(login, password, rememberMe)
     if (response.data.resultCode === ResultCodes.Success) {
@@ -70,6 +70,5 @@ export const authResponse = (login: string, password: string, rememberMe: boolea
         //    npm install react-native-root-toast
     }
 }
-//Egorsocialnetwork@gmail.com
-//socialnetwork
-export default authReducer
+
+export default authR

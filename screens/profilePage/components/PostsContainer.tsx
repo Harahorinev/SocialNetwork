@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { MAIN_PADDING, MAIN_WHITE, SECOND_WHITE } from '../../../constatnts'
-import {PostType} from "../../../redux/profileReducer";
+import {PostT} from "../../../redux/userPostsR";
 import Post from "./PostComponent";
 
-function PostsContainer({posts}: {posts: PostType[]}) {
+function PostsContainer({posts}: {posts: PostT[]}) {
     return (
         <View style={styles.lowPostsContainer}>
             <View style={styles.highPostsContainer}>

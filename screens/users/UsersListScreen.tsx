@@ -10,24 +10,28 @@ import {
 import {useEffect} from "react";
 import {MAIN_PADDING, MAIN_WHITE} from "../../constatnts";
 import {connect} from "react-redux";
-import {followUnfollow, getUsers, isFetching, UsersReducerType, UserType} from "../../redux/allUsersReducer";
+import {followUnfollow, getUsers, isFetching, UsersRT, UserT} from "../../redux/allUsersR";
 import UserComponentForList from "./components/UserComponentForList";
 import {AllStateType} from "../../redux/store";
+import {NativeStackNavigationProp} from "react-native-screens/native-stack";
+import {DrawerParamList, RootStackParamList} from "../../types";
+import {RouteProp} from "@react-navigation/native";
 
 type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
 
 type MapStatePropsType = {
-    users: UsersReducerType
+    users: UsersRT
 }
 
 type MapDispatchPropsType = {
     isFetching: (status: boolean) => {}
-    getUsers: any
-    followUnfollow: any
+    getUsers: (fetching: boolean, page: number) => void
+    followUnfollow: (userId: number, userFollowed: boolean) => void
 }
 
 type OwnPropsType = {
-    navigation: any
+    navigation: NativeStackNavigationProp<RootStackParamList>
+    route: RouteProp<DrawerParamList, 'Users'>
 }
 
 const UsersListScreen = (props: Props) => {
@@ -35,7 +39,7 @@ const UsersListScreen = (props: Props) => {
         props.getUsers(props.users.fetching, props.users.page)
     }, [props.users.fetching])
 
-    const renderItem: ListRenderItem<UserType> = (itm: ListRenderItemInfo<UserType>) => {
+    const renderItem: ListRenderItem<UserT> = (itm: ListRenderItemInfo<UserT>) => {
         return (
             <UserComponentForList navigation={() => props.navigation.navigate('User', {id: itm.item.id})}
                                   name={itm.item.name}
