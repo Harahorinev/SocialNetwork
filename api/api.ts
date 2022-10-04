@@ -59,24 +59,22 @@ type AuthLoginR = {
 }
 
 type ProfileR = {
-    userId: number
-    lookingForAJob: boolean
-    lookingForAJobDescription: string
-    fullName: string
+    aboutMe: string | null
     contacts: {
-        github: string
-        vk: string
-        facebook: string
-        instagram: string
-        twitter: string
-        website: string
-        youtube: string
-        mainLink: string
-    }
-    photos: {
-        small: string
-        large: string
-    }
+        facebook: string | null
+        github: string | null
+        instagram: string | null
+        mainLink: string | null
+        twitter: string | null
+        vk: string | null
+        website: string | null
+        youtube: string | null
+    },
+    fullName: string | null
+    lookingForAJob: boolean | null
+    lookingForAJobDescription: string | null
+    photos: { "large": any, "small": any }
+    userId: number | null
 }
 
 export const authAPI = {

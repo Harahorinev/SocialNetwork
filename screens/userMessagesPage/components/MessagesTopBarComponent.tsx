@@ -11,9 +11,7 @@ interface Props {
 const MessagesTopBarComponent = (props: Props) => {
     return (
         <View style={styles.topBar}>
-            <TouchableOpacity
-                onPress={() => props.navigation()}
-            >
+            <TouchableOpacity onPress={() => props.navigation()}>
                 <AntDesign name="left" size={30} color="#4F8EF7"/>
             </TouchableOpacity>
             <View style={{flex: 1}}/>
@@ -32,13 +30,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 10,
         shadowColor: "#000",
+        zIndex: 1,
         shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
-
         elevation: 4,
         backgroundColor: MAIN_WHITE
     },

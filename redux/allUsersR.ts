@@ -129,25 +129,32 @@ export const toggleFollowingProgress = (isFetching: boolean, userId: number): To
 export const getUsers = (fetching: boolean, page: number)
     : ThunksType => async (dispatch) => {
     if (fetching) {
-        usersAPI.getUsers(page).then((data) => {
+        try {
+            let data = await usersAPI.getUsers(page)
             if (Math.ceil(data.totalCount / REQUEST_QUANTITY_USERS) >= page) {
                 dispatch(fetchNextPage(page + 1))
                 dispatch(addUsers(data.items))
             }
             dispatch(isFetching(false))
-        })
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 
 export const followUnfollow = (userId: number, userFollowed: boolean)
     : ThunksType => async (dispatch) => {
     dispatch(toggleFollowingProgress(true, userId))
-    usersAPI.userFollower(userFollowed, userId).then((resultCode) => {
+    try {
+        let resultCode = await usersAPI.userFollower(userFollowed, userId)
         if (resultCode === 0) {
             dispatch(followStatusChanger(userId))
         }
         dispatch(toggleFollowingProgress(false, userId))
-    })
+    } catch (err) {
+        console.log(err)
+    }
+
 }
 
 export default allUsersR

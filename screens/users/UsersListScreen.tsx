@@ -5,9 +5,10 @@ import {
     ListRenderItem,
     ListRenderItemInfo,
     StyleSheet,
-    View
+    View,
+    RefreshControl
 } from "react-native";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {MAIN_PADDING, MAIN_WHITE} from "../../constatnts";
 import {connect} from "react-redux";
 import {followUnfollow, getUsers, isFetching, UsersRT, UserT} from "../../redux/allUsersR";
@@ -35,6 +36,8 @@ type OwnPropsType = {
 }
 
 const UsersListScreen = (props: Props) => {
+    const [refreshing, setRefreshing] = useState<boolean>(false)
+
     useEffect(() => {
         props.getUsers(props.users.fetching, props.users.page)
     }, [props.users.fetching])
@@ -52,6 +55,11 @@ const UsersListScreen = (props: Props) => {
         )
     }
 
+    const refresh = () => {
+        setRefreshing(true)
+        setTimeout(() => setRefreshing(false), 1000)
+    }
+
     return (
         <View style={styles.mainContainer}>
             <FlatList
@@ -61,6 +69,10 @@ const UsersListScreen = (props: Props) => {
                 onEndReached={() => props.isFetching(true)}
                 onEndReachedThreshold={0.5}
                 scrollEnabled={!props.users.fetching}
+                refreshControl={<RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => refresh()}
+                />}
             />
             {props.users.fetching
                 ? <View style={{width: '100%', alignItems: 'center', backgroundColor: MAIN_WHITE}}>

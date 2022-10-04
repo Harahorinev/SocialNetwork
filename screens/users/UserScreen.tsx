@@ -1,17 +1,17 @@
 import * as React from 'react'
-import {StyleSheet, Text, View, SafeAreaView} from "react-native";
+import {StyleSheet, View, SafeAreaView, Image} from "react-native";
 import {MAIN_WHITE} from "../../constatnts";
 import MessagesTopBarComponent from "../userMessagesPage/components/MessagesTopBarComponent";
 import {useEffect, useState} from "react";
 import {profileAPI} from "../../api/api";
 import {connect} from "react-redux";
 import {AllStateType} from "../../redux/store";
-import AvaDescriptionComponent from "../profilePage/components/AvaDescriptionComponent";
-import PostsContainer from "../profilePage/components/PostsContainer";
-import {ProfileStateT} from "../../redux/userPostsR";
 import {NativeStackNavigationProp} from "react-native-screens/native-stack";
 import {RootStackParamList} from "../../types";
 import {RouteProp} from "@react-navigation/native";
+import UserDescriptionComponent from "./components/UserDescriptionComponent";
+import PostsContainer from "../profilePage/components/PostsContainer";
+import {ProfileStateT} from "../../redux/userPostsR";
 
 type Props = StateProps & DispatchProps & OwnProps
 
@@ -28,13 +28,31 @@ type OwnProps = {
 
 // 25708
 
+type LocalState = {
+    aboutMe: string | null
+    contacts: {
+        facebook: string | null
+        github: string | null
+        instagram: string | null
+        mainLink: string | null
+        twitter: string | null
+        vk: string | null
+        website: string | null
+        youtube: string | null
+    },
+    fullName: string | null
+    lookingForAJob: boolean | null
+    lookingForAJobDescription: string | null
+    photos: { "large": any, "small": any }
+    userId: number | null
+}
+
 const UserScreen = (props: Props) => {
-    const [userName, setUserName] = useState<string>('')
+    const [profileState, setProfileState] = useState<LocalState | null>(null)
     useEffect(() => {
-        // profileAPI.getProfile(25708).then((data) => {
         profileAPI.getProfile(props.route.params.id).then((data) => {
             if (data) {
-                setUserName(data.fullName)
+                setProfileState(data)
             }
         })
     }, [])
@@ -42,16 +60,18 @@ const UserScreen = (props: Props) => {
         <SafeAreaView style={styles.container}>
             <MessagesTopBarComponent name={'Profile'}
                                      navigation={() => props.navigation.replace('Root', {initialRouteName: 'Users'})}/>
-            <View>
-                <Text>{userName ? userName : ''}</Text>
-            </View>
-            <AvaDescriptionComponent
-                ava={props.profile.ava}
-                description={props.profile.description}
-                addPost={null}
-                login={'props.profile'}
-            />
-            <PostsContainer posts={props.profile.posts}/>
+            {profileState && profileState.userId
+                ? <View style={{flex: 1, width: '100%', backgroundColor: 'red'}}>
+                    <UserDescriptionComponent
+                        addPost={null}
+                        ava={profileState.photos.large}
+                        aboutMe={profileState.aboutMe}
+                        login={profileState.fullName}
+                    />
+                    <PostsContainer posts={props.profile.posts}/>
+                </View>
+                : <Image style={{height: 150, width: 150}} source={require('../../assets/images/preLoader.gif')}/>
+            }
         </SafeAreaView>
     )
 }
@@ -64,7 +84,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const mapStateToProps = (state: AllStateType) => {
+const mapStateToProps = (state: AllStateType): StateProps => {
     return {
         profile: state.profilePage
     }

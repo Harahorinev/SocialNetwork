@@ -12,15 +12,15 @@ import {NativeStackNavigationProp} from "react-native-screens/native-stack";
 import {DrawerParamList} from "../../types";
 import {RouteProp} from "@react-navigation/native";
 
-type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
-type MapStatePropsType = {
+type Props = StatePropsT & DispatchPropsT & OwnPropsT
+type StatePropsT = {
     profilePage: ProfileStateT,
     userInfo: AuthStateT
 }
-type MapDispatchPropsType = {
+type DispatchPropsT = {
     addPost: (postText: string) => {}
 }
-type OwnPropsType = {
+type OwnPropsT = {
     navigation: NativeStackNavigationProp<DrawerParamList>
     route: RouteProp<DrawerParamList, 'Profile'>
 }
@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
     },
 })
 
-const mapStateToProps = (state: AllStateType): MapStatePropsType => {
+const mapStateToProps = (state: AllStateType): StatePropsT => {
     return {
         profilePage: state.profilePage,
         userInfo: state.auth
     }
 }
 
-export default connect<MapStatePropsType, MapDispatchPropsType,
-    OwnPropsType, AllStateType>(mapStateToProps, {addPost: addPostAC})(ProfilePage);
+export default connect<StatePropsT, DispatchPropsT,
+    OwnPropsT, AllStateType>(mapStateToProps, {addPost: addPostAC})(ProfilePage);

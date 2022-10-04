@@ -33,8 +33,7 @@ const UserComponentForList = (props: Props) => {
                     onPress={() => props.followUnfollow(props.id, props.followed)}
                     disabled={props.followingInProgress.some((id: number) => id === props.id)}
                 >
-                    <Text
-                        style={{color: props.followed ? 'green' : 'red'}}
+                    <Text style={{color: props.followed ? 'green' : 'red'}}
                     >{props.followed ? 'follow' : 'unfollow'}</Text>
                 </TouchableOpacity>
             </View>
