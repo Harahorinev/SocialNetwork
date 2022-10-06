@@ -11,16 +11,16 @@ import {
 import {useEffect, useState} from "react";
 import {MAIN_PADDING, MAIN_WHITE} from "../../constatnts";
 import {connect} from "react-redux";
-import {followUnfollow, getUsers, isFetching, UsersRT, UserT} from "../../redux/allUsersR";
+import {followUnfollow, getUsers, actions, UsersRT, UserT} from "../../redux/allUsersR";
 import UserComponentForList from "./components/UserComponentForList";
 import {AllStateType} from "../../redux/store";
 import {NativeStackNavigationProp} from "react-native-screens/native-stack";
 import {DrawerParamList, RootStackParamList} from "../../types";
 import {RouteProp} from "@react-navigation/native";
 
-type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
+type Props = MapStatePropsT & MapDispatchPropsType & OwnPropsType
 
-type MapStatePropsType = {
+type MapStatePropsT = {
     users: UsersRT
 }
 
@@ -95,11 +95,12 @@ const styles = StyleSheet.create({
     },
 })
 
-const mapStateToProps = (state: AllStateType): MapStatePropsType => {
+const mapStateToProps = (state: AllStateType): MapStatePropsT => {
     return {
         users: state.usersPage
     }
 }
 
-export default connect<MapStatePropsType, MapDispatchPropsType,
-    OwnPropsType, AllStateType>(mapStateToProps, {isFetching, getUsers, followUnfollow})(UsersListScreen)
+export default connect<MapStatePropsT, MapDispatchPropsType,
+    OwnPropsType, AllStateType>(mapStateToProps,
+    {isFetching: actions.isFetching, getUsers, followUnfollow})(UsersListScreen)

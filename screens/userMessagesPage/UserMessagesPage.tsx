@@ -7,7 +7,7 @@ import {
     Platform,
 } from 'react-native'
 import {MAIN_WHITE} from "../../constatnts";
-import {addMessage, Dialog, Message} from "../../redux/dialogsR";
+import {actions, Dialog, Message} from "../../redux/dialogsR";
 import MessageTextInputComponent from "./components/MessageTextInputComponent";
 import MessagesTopBarComponent from "./components/MessagesTopBarComponent";
 import MessagesListComponent from "./components/MessagesListComponent";
@@ -56,7 +56,7 @@ function UserMessagesPage(props: Props) {
             <KeyboardAvoidingView
                 style={styles.keyboardAvoiding}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                enabled keyboardVerticalOffset={0}
+                enabled keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
             >
                 <View style={{flex: 1, width: '100%'}}>
                     <MessagesTopBarComponent
@@ -94,4 +94,4 @@ const mapStateToProps = (state: AllStateType): MapStatePropsType => {
 }
 
 export default connect<MapStatePropsType, MapDispatchPropsType,
-    OwnPropsType, AllStateType>(mapStateToProps, {addMessage})(UserMessagesPage)
+    OwnPropsType, AllStateType>(mapStateToProps, {addMessage: actions.addMessage})(UserMessagesPage)

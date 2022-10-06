@@ -5,7 +5,7 @@ import {SECOND_WHITE} from "../../constatnts";
 import AvaDescriptionComponent from "./components/AvaDescriptionComponent";
 import PostsContainer from "./components/PostsContainer";
 import {connect} from "react-redux";
-import {addPostAC, ProfileStateT} from "../../redux/userPostsR";
+import {actions, ProfileST} from "../../redux/userPostsR";
 import {AllStateType} from "../../redux/store";
 import {AuthStateT} from "../../redux/authR";
 import {NativeStackNavigationProp} from "react-native-screens/native-stack";
@@ -14,7 +14,7 @@ import {RouteProp} from "@react-navigation/native";
 
 type Props = StatePropsT & DispatchPropsT & OwnPropsT
 type StatePropsT = {
-    profilePage: ProfileStateT,
+    profilePage: ProfileST,
     userInfo: AuthStateT
 }
 type DispatchPropsT = {
@@ -54,4 +54,4 @@ const mapStateToProps = (state: AllStateType): StatePropsT => {
 }
 
 export default connect<StatePropsT, DispatchPropsT,
-    OwnPropsT, AllStateType>(mapStateToProps, {addPost: addPostAC})(ProfilePage);
+    OwnPropsT, AllStateType>(mapStateToProps, {addPost: actions.addPostAC})(ProfilePage);

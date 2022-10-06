@@ -11,12 +11,12 @@ import {RootStackParamList} from "../../types";
 import {RouteProp} from "@react-navigation/native";
 import UserDescriptionComponent from "./components/UserDescriptionComponent";
 import PostsContainer from "../profilePage/components/PostsContainer";
-import {ProfileStateT} from "../../redux/userPostsR";
+import {ProfileST} from "../../redux/userPostsR";
 
 type Props = StateProps & DispatchProps & OwnProps
 
 type StateProps = {
-    profile: ProfileStateT
+    profile: ProfileST
 }
 
 type DispatchProps = {}

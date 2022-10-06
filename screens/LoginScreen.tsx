@@ -37,17 +37,17 @@ const LoginScreen = (props: Props) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{flex: 1, width: '100%', paddingHorizontal: MAIN_PADDING,}}>
+            <View style={{flex: 1, width: '100%', paddingHorizontal: MAIN_PADDING, paddingVertical: 30,}}>
                 <TextInput
                     placeholder={'Login'}
-                    style={{height: 30, width: '100%', borderWidth: 1, paddingHorizontal: 7}}
+                    style={{height: 35, width: '100%', borderWidth: 1, paddingHorizontal: 7, fontSize: 14}}
                     value={login}
                     onChangeText={(value: string) => setLogin(value)}
                 />
                 <View style={{height: 10}}/>
                 <TextInput
                     placeholder={'Password'}
-                    style={{height: 30, width: '100%', borderWidth: 1, paddingHorizontal: 7}}
+                    style={{height: 35, width: '100%', borderWidth: 1, paddingHorizontal: 7, fontSize: 14,}}
                     value={password}
                     onChangeText={(value: string) => setPassword(value)}
                 />
@@ -78,7 +78,7 @@ const LoginScreen = (props: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: '100%'
+        width: '100%',
     },
     loginBtn: {
         height: 30,

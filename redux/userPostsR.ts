@@ -1,25 +1,6 @@
-const ADD_POST = 'ADD_POST'
+import {InferActionsTypes} from "./store";
 
-export type ProfileStateT = {
-    ava: HTMLImageElement
-    description: string
-    posts: PostT[]
-}
-
-type AddPostT = {
-    type: string
-    newPostContent: string
-}
-
-type PostsActionsT = AddPostT
-
-export type PostT = {
-    id: number
-    postText: string
-    likesCounter: number
-}
-
-const userPostsState: ProfileStateT = {
+const userPostsS: ProfileST = {
     ava: require('../assets/images/ava.jpeg'),
     description: 'Description',
     posts: [
@@ -41,16 +22,18 @@ const userPostsState: ProfileStateT = {
     ],
 }
 
-export const addPostAC = (newPostContent: string) => (
-    {
-        type: ADD_POST,
-        newPostContent: newPostContent
-    }
-);
+export const actions = {
+    addPostAC: (newPostContent: string) => (
+        {
+            type: 'ADD_POST',
+            newPostContent: newPostContent
+        }
+    ),
+}
 
-const userPostsR = (state = userPostsState, action: PostsActionsT) => {
+const userPostsR = (state = userPostsS, action: UserPostRAT) => {
     switch (action.type) {
-        case ADD_POST:
+        case 'ADD_POST':
             let newPost: PostT = {
                 id: state.posts[state.posts.length - 1].id + 1,
                 postText: action.newPostContent,
@@ -66,3 +49,16 @@ const userPostsR = (state = userPostsState, action: PostsActionsT) => {
 }
 
 export default userPostsR
+
+
+type UserPostRAT = InferActionsTypes<typeof actions>
+export type ProfileST = {
+    ava: HTMLImageElement
+    description: string
+    posts: PostT[]
+}
+export type PostT = {
+    id: number
+    postText: string
+    likesCounter: number
+}

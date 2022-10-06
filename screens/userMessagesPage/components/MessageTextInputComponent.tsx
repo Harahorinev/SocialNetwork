@@ -14,23 +14,23 @@ const MessageTextInputComponent = (props: Props) => {
 
     return (
         <View style={styles.textInputContainer}>
-        <TextInput
-            style={styles.textInput}
-            onSubmitEditing={Keyboard.dismiss}
-            onChangeText={(text) => setNewMessage(text)}
-            value={newMessage}
-        />
-        <View style={{width: 10}}/>
-        <TouchableOpacity
-            style={styles.sendBtn}
-            onPress={() => {
-                props.addMessage(props.userId, newMessage)
-                setNewMessage('')
-            }}
-        >
-            <Feather name="send" color="#4F8EF7" size={20}/>
-        </TouchableOpacity>
-    </View>
+            <TextInput
+                style={styles.textInput}
+                onSubmitEditing={Keyboard.dismiss}
+                onChangeText={(text) => setNewMessage(text)}
+                value={newMessage}
+            />
+            <View style={{width: 10}}/>
+            <TouchableOpacity
+                style={styles.sendBtn}
+                onPress={() => {
+                    props.addMessage(props.userId, newMessage)
+                    setNewMessage('')
+                }}
+            >
+                <Feather name="send" color="#4F8EF7" size={20}/>
+            </TouchableOpacity>
+        </View>
     )
 }
 

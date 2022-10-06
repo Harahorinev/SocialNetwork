@@ -1,23 +1,6 @@
-const ADD_NEW_MESSAGE = 'ADD_NEW_MESSAGE'
+import {InferActionsTypes} from "./store";
 
-export type DialogsStateT = {
-    dialogs: Dialog[]
-}
-
-export type Dialog = {
-    userId: number,
-    name: string,
-    messagesData: Message[]
-}
-
-export type Message = {
-    id: number
-    message: string
-}
-
-type DialogsActionsT = AddMessageACT
-
-let dialogsState: DialogsStateT = {
+let dialogsState: DialogsST = {
     dialogs: [
         {
             userId: 1,
@@ -118,9 +101,9 @@ let dialogsState: DialogsStateT = {
     ]
 }
 
-const dialogsR = (state: DialogsStateT = dialogsState, action: DialogsActionsT) => {
+const dialogsR = (state: DialogsST = dialogsState, action: DialogsRAT) => {
     switch (action.type) {
-        case ADD_NEW_MESSAGE: {
+        case 'ADD_NEW_MESSAGE': {
             let newDialogs = state.dialogs.map(d => {
                 if (d.userId !== action.userId) {
                     return d
@@ -145,18 +128,29 @@ const dialogsR = (state: DialogsStateT = dialogsState, action: DialogsActionsT) 
     }
 }
 
-type AddMessageACT = {
-    type: typeof ADD_NEW_MESSAGE
-    userId: number
-    newMessageContent: string
+export const actions = {
+    addMessage: (userId: number, newMessageText: string) => (
+        {
+            type: 'ADD_NEW_MESSAGE',
+            userId: userId,
+            newMessageContent: newMessageText
+        }
+    ),
 }
 
-export const addMessage = (userId: number, newMessageText: string): AddMessageACT => (
-    {
-        type: ADD_NEW_MESSAGE,
-        userId: userId,
-        newMessageContent: newMessageText
-    }
-)
-
 export default dialogsR
+
+
+type DialogsRAT = InferActionsTypes<typeof actions>
+export type DialogsST = {
+    dialogs: Dialog[]
+}
+export type Dialog = {
+    userId: number,
+    name: string,
+    messagesData: Message[]
+}
+export type Message = {
+    id: number
+    message: string
+}

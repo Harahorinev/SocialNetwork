@@ -1,23 +1,24 @@
 import {usersAPI} from "../api/api";
 import {REQUEST_QUANTITY_USERS} from "../constatnts";
-import {ThunkAction} from "redux-thunk";
-import {AllStateType} from "./store";
+import {DefaultThunksT, InferActionsTypes} from "./store";
 
-const ADD_USERS = 'ADD_USERS'
-const IS_FETCHING = 'IS_FETCHING'
-const FETCH_NEXT_PAGE = 'FETCH_NEXT_PAGE'
-const FOLLOW_STATUS_CHANGER = 'FOLLOW_STATUS_CHANGER'
-const TOGGLE_FOLLOWING_PROGRESS = 'TOGGLE_FOLLOWING_PROGRESS'
-
-type ActionsTypes = AddUsersType
-    | IsFetchingT
-    | FetchNextPageT
-    | FollowStatusChangerT
-    | ToggleFollowingProgressT
-
-type ThunksType = ThunkAction<Promise<void>, AllStateType, any, ActionsTypes>
-
-export type UsersRT = typeof usersStateR
+export const actions = {
+    addUsers: (users: UserT[]) => (
+        {type: 'ADD_USERS', users} as const
+    ),
+    isFetching: (status: boolean) => (
+        {type: 'IS_FETCHING', status} as const
+    ),
+    fetchNextPage: (pageNum: number) => (
+        {type: 'FETCH_NEXT_PAGE', pageNum} as const
+    ),
+    followStatusChanger: (userId: number) => (
+        {type: 'FOLLOW_STATUS_CHANGER', userId} as const
+    ),
+    toggleFollowingProgress: (isFetching: boolean, userId: number) => (
+        {type: 'TOGGLE_FOLLOWING_PROGRESS', isFetching, userId} as const
+    ),
+}
 
 const usersStateR = {
     users: [] as UserT[],
@@ -26,27 +27,27 @@ const usersStateR = {
     followingInProgress: [] as number[]
 }
 
-const allUsersR = (state = usersStateR, action: ActionsTypes) => {
+const allUsersR = (state = usersStateR, action: AllUsersRAT) => {
     switch (action.type) {
-        case ADD_USERS: {
+        case 'ADD_USERS': {
             return {
                 ...state,
                 users: [...state.users, ...action.users]
             }
         }
-        case IS_FETCHING: {
+        case 'IS_FETCHING': {
             return {
                 ...state,
                 fetching: action.status
             }
         }
-        case FETCH_NEXT_PAGE: {
+        case 'FETCH_NEXT_PAGE': {
             return {
                 ...state,
                 page: action.pageNum
             }
         }
-        case FOLLOW_STATUS_CHANGER: {
+        case 'FOLLOW_STATUS_CHANGER': {
             return {
                 ...state,
                 users: state.users.map((us) => {
@@ -61,7 +62,7 @@ const allUsersR = (state = usersStateR, action: ActionsTypes) => {
                 })
             }
         }
-        case TOGGLE_FOLLOWING_PROGRESS:
+        case 'TOGGLE_FOLLOWING_PROGRESS':
             return {
                 ...state,
                 followingInProgress: action.isFetching
@@ -72,70 +73,17 @@ const allUsersR = (state = usersStateR, action: ActionsTypes) => {
             return state
     }
 }
-export type Photos = {
-    small: string
-    large: string
-}
-
-export type UserT = {
-    id: number
-    name: string
-    status: string
-    photos: Photos
-    followed: boolean
-}
-
-type AddUsersType = {
-    type: typeof ADD_USERS,
-    users: UserT[]
-}
-export const addUsers = (users: UserT[]): AddUsersType => (
-    {type: ADD_USERS, users}
-)
-
-type IsFetchingT = {
-    type: typeof IS_FETCHING
-    status: boolean
-}
-export const isFetching = (status: boolean): IsFetchingT => (
-    {type: IS_FETCHING, status}
-)
-
-type FetchNextPageT = {
-    type: typeof FETCH_NEXT_PAGE
-    pageNum: number
-}
-export const fetchNextPage = (pageNum: number): FetchNextPageT => (
-    {type: FETCH_NEXT_PAGE, pageNum}
-)
-
-type FollowStatusChangerT = {
-    type: typeof FOLLOW_STATUS_CHANGER
-    userId: number
-}
-export const followStatusChanger = (userId: number): FollowStatusChangerT => (
-    {type: FOLLOW_STATUS_CHANGER, userId}
-)
-
-type ToggleFollowingProgressT = {
-    type: typeof TOGGLE_FOLLOWING_PROGRESS
-    isFetching: boolean
-    userId: number
-}
-export const toggleFollowingProgress = (isFetching: boolean, userId: number): ToggleFollowingProgressT => (
-    {type: TOGGLE_FOLLOWING_PROGRESS, isFetching, userId}
-)
 
 export const getUsers = (fetching: boolean, page: number)
-    : ThunksType => async (dispatch) => {
+    : ThunksT => async (dispatch) => {
     if (fetching) {
         try {
             let data = await usersAPI.getUsers(page)
             if (Math.ceil(data.totalCount / REQUEST_QUANTITY_USERS) >= page) {
-                dispatch(fetchNextPage(page + 1))
-                dispatch(addUsers(data.items))
+                dispatch(actions.fetchNextPage(page + 1))
+                dispatch(actions.addUsers(data.items))
             }
-            dispatch(isFetching(false))
+            dispatch(actions.isFetching(false))
         } catch (err) {
             console.log(err)
         }
@@ -143,18 +91,36 @@ export const getUsers = (fetching: boolean, page: number)
 }
 
 export const followUnfollow = (userId: number, userFollowed: boolean)
-    : ThunksType => async (dispatch) => {
-    dispatch(toggleFollowingProgress(true, userId))
+    : ThunksT => async (dispatch) => {
+    dispatch(actions.toggleFollowingProgress(true, userId))
     try {
         let resultCode = await usersAPI.userFollower(userFollowed, userId)
         if (resultCode === 0) {
-            dispatch(followStatusChanger(userId))
+            dispatch(actions.followStatusChanger(userId))
         }
-        dispatch(toggleFollowingProgress(false, userId))
+        setTimeout(() => {
+            dispatch(actions.toggleFollowingProgress(false, userId))
+        }, 250)
+    //    TODO DELETE TIMEOUT
     } catch (err) {
         console.log(err)
     }
-
 }
 
 export default allUsersR
+
+
+type AllUsersRAT = InferActionsTypes<typeof actions>
+type ThunksT = DefaultThunksT<AllUsersRAT>
+export type UsersRT = typeof usersStateR
+export type Photos = {
+    small: string
+    large: string
+}
+export type UserT = {
+    id: number
+    name: string
+    status: string
+    photos: Photos
+    followed: boolean
+}
