@@ -16,9 +16,6 @@ import {RouteProp} from "@react-navigation/native";
 const Drawer = createDrawerNavigator<DrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
-type InitialParams = {
-    initialRouteName: InitialRouteName
-}
 enum InitialRouteName {
     Profile = 'Profile',
     Dialogs = 'Dialogs',
@@ -30,9 +27,12 @@ type Props = {
     route: RouteProp<RootStackParamList, 'Root'>
 }
 
-function DrawerNavigator(initialParams: InitialParams) {
+const DrawerNavigator = (props: Props) => {
+    let initialRouteName: InitialRouteName = props.route.params && props.route.params.initialRouteName
+        ? InitialRouteName[props.route.params.initialRouteName as keyof typeof InitialRouteName]
+        : InitialRouteName.Profile
     return (
-        <Drawer.Navigator initialRouteName={initialParams.initialRouteName}>
+        <Drawer.Navigator initialRouteName={initialRouteName}>
             <Drawer.Screen name="Profile" component={ProfilePage} options={{headerShown: true}}/>
             <Drawer.Screen name="Dialogs" component={DialogsPage} options={{headerShown: true}}/>
             <Drawer.Screen name="Users" component={UsersPage} options={{headerShown: true}}/>
@@ -42,23 +42,17 @@ function DrawerNavigator(initialParams: InitialParams) {
     )
 }
 
-function StackNavigator() {
+const StackNavigator = (props: any) => {
+    console.log('props', props)
     return (
         <Stack.Navigator>
             <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Root" component={DrawerNew} options={{headerShown: false}}/>
-            <Stack.Screen name="Messages" component={UserMessagesPage} options={{headerShown: false}}/>
-            <Stack.Screen name="User" component={UserScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Root" component={DrawerNavigator} options={{headerShown: false}}/>
+            <Stack.Screen name="Messages" component={UserMessagesPage}
+                          options={{headerShown: true, headerBackTitle: ''}}/>
+            <Stack.Screen name="User" component={UserScreen}
+                          options={{headerShown: true, headerBackTitle: ''}}/>
         </Stack.Navigator>
-    )
-}
-
-const DrawerNew = (props: Props) => {
-    let initialRouteName: InitialRouteName = props.route.params && props.route.params.initialRouteName
-        ? InitialRouteName[props.route.params.initialRouteName as keyof typeof InitialRouteName]
-        : InitialRouteName.Profile
-    return (
-        <DrawerNavigator initialRouteName={initialRouteName} {...props} />
     )
 }
 

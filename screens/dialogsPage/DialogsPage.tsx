@@ -27,7 +27,7 @@ function DialogsPage(props: Props) {
                 name={itm.item.name}
                 lastMessage={itm.item.messagesData[itm.item.messagesData.length - 1].message}
                 messages={itm.item.messagesData}
-                navigation={() => props.navigation.replace('Messages', {userId: itm.item.userId})}
+                navigation={() => props.navigation.navigate('Messages', {userId: itm.item.userId})}
             />
         )
     }

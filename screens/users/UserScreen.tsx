@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {StyleSheet, View, SafeAreaView, Image} from "react-native";
 import {MAIN_WHITE} from "../../constatnts";
-import MessagesTopBarComponent from "../userMessagesPage/components/MessagesTopBarComponent";
 import {useEffect, useState} from "react";
 import {profileAPI} from "../../api/api";
 import {connect} from "react-redux";
@@ -49,17 +48,25 @@ type LocalState = {
 
 const UserScreen = (props: Props) => {
     const [profileState, setProfileState] = useState<LocalState | null>(null)
+    const [wasLoad, setWasLoad] = useState<boolean>(false)
+
     useEffect(() => {
         profileAPI.getProfile(props.route.params.id).then((data) => {
             if (data) {
                 setProfileState(data)
+                // @ts-ignore
+                props.navigation.setOptions({title: data.fullName})
+                setWasLoad(true)
             }
         })
     }, [])
+
+    if (!wasLoad) {
+        return <Image style={{height: 150, width: 150}} source={require('../../assets/images/preLoader.gif')}/>
+    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <MessagesTopBarComponent name={'Profile'}
-                                     navigation={() => props.navigation.replace('Root', {initialRouteName: 'Users'})}/>
             {profileState && profileState.userId
                 ? <View style={{flex: 1, width: '100%', backgroundColor: 'red'}}>
                     <UserDescriptionComponent

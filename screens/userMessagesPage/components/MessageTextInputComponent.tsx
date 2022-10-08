@@ -22,11 +22,12 @@ const MessageTextInputComponent = (props: Props) => {
             />
             <View style={{width: 10}}/>
             <TouchableOpacity
-                style={styles.sendBtn}
+                style={{...styles.sendBtn, opacity: newMessage ? 1 : 0.2}}
                 onPress={() => {
                     props.addMessage(props.userId, newMessage)
                     setNewMessage('')
                 }}
+                disabled={!newMessage}
             >
                 <Feather name="send" color="#4F8EF7" size={20}/>
             </TouchableOpacity>

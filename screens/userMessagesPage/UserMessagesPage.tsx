@@ -4,12 +4,11 @@ import {
     StyleSheet,
     View,
     KeyboardAvoidingView,
-    Platform,
+    Platform, Image, Dimensions,
 } from 'react-native'
 import {MAIN_WHITE} from "../../constatnts";
 import {actions, Dialog, Message} from "../../redux/dialogsR";
 import MessageTextInputComponent from "./components/MessageTextInputComponent";
-import MessagesTopBarComponent from "./components/MessagesTopBarComponent";
 import MessagesListComponent from "./components/MessagesListComponent";
 import {useEffect} from "react";
 import {useState} from "react";
@@ -18,6 +17,7 @@ import {AllStateType} from "../../redux/store";
 import {NativeStackNavigationProp} from "react-native-screens/native-stack";
 import {RootStackParamList} from "../../types";
 import {RouteProp} from "@react-navigation/native";
+import { useHeaderHeight } from '@react-navigation/elements'
 
 type Props = MapStatePropsType & MapDispatchPropsType & OwnPropsType
 
@@ -35,8 +35,10 @@ type OwnPropsType = {
 }
 
 function UserMessagesPage(props: Props) {
+    const headerHeight = useHeaderHeight()
+    const height = Dimensions.get('window').height
     const [messages, setMessages] = useState<Message[]>([])
-    const [name, setName] = useState<string>('')
+    const [wasLoad, setWasLoad] = useState<boolean>(false)
 
     useEffect(() => {
         let user = props.dialogs.find((d: Dialog) => {
@@ -46,23 +48,25 @@ function UserMessagesPage(props: Props) {
         })
         if (user) {
             setMessages(user.messagesData)
-            setName(user.name)
+            // @ts-ignore
+            props.navigation.setOptions({title: user.name})
+            setWasLoad(true)
         }
+        console.log('height', height)
     }, [props])
 
+    if (!wasLoad) {
+        return <Image style={{height: 150, width: 150}} source={require('../../assets/images/preLoader.gif')}/>
+    }
 
     return (
         <SafeAreaView style={styles.mainContainer}>
             <KeyboardAvoidingView
                 style={styles.keyboardAvoiding}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                enabled keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
+                enabled keyboardVerticalOffset={Platform.OS === "ios" ? 0 : headerHeight + (height - headerHeight) * 0.047}
             >
                 <View style={{flex: 1, width: '100%'}}>
-                    <MessagesTopBarComponent
-                        name={name}
-                        navigation={() => props.navigation.replace('Root', {initialRouteName: 'Dialogs'})}
-                    />
                     <MessagesListComponent messages={messages}/>
                     <MessageTextInputComponent
                         userId={props.route.params.userId}
